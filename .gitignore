@@ -1,0 +1,14 @@
+### Basic
+target/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+package.json
+pnpm-lock.yaml
+pnpmfile.js
+webpack.config.js
+webpack.generated.js

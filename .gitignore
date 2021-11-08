@@ -8,7 +8,9 @@ target/
 *.ipr
 
 package.json
+package-lock.json
 pnpm-lock.yaml
 pnpmfile.js
 webpack.config.js
 webpack.generated.js
+node_modules

@@ -18,13 +18,8 @@ import com.vaadin.flow.router.*;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     public static final String LOGIN_FROM_ID = "loginFormId";
-    public static final String LOGIN_USERNAME_ID = "loginUserNameId";
-    public static final String LOGIN_PASSWORD_ID = "loginPasswordId";
 
     private final LoginForm loginForm;
-    private TextField userName;
-    private PasswordField password;
-    private Button submitButton;
 
     public LoginView() {
         loginForm = new LoginForm();
@@ -36,17 +31,16 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         loginForm.setAction("login");
+        loginForm.setForgotPasswordButtonVisible(false);
         add(new H1("Login"), loginForm);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-
         if (beforeEnterEvent.getLocation()
                 .getQueryParameters()
                 .getParameters()
-                .containsKey("error")
-        ) {
+                .containsKey("error")) {
             loginForm.setError(true);
         }
     }

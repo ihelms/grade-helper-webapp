@@ -1,6 +1,6 @@
 package com.grade.helper.ui;
 
-import com.grade.helper.businesslogic.enums.SCHOOL_YEAR;
+import com.grade.helper.businesslogic.entities.SchoolYearDAO;
 import com.grade.helper.ui.component.OverviewView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -18,18 +18,18 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.*;
  * created by ihelms on 18.11.2021
  */
 
-public abstract class ApplicationView extends AppLayout {
+public abstract class HeaderView extends AppLayout {
     public static String TITLE = "Grade Helper";
 
-    public ApplicationView() {
+    public HeaderView() {
         Anchor logo = new Anchor("/home", TITLE);
         Anchor logout = new Anchor("logout", "Log out");
 
-        ComboBox<SCHOOL_YEAR> comboBox = new ComboBox<>("");
+        ComboBox<SchoolYearDAO> comboBox = new ComboBox<>("");
         comboBox.setClearButtonVisible(true);
 
         //TODO: CHANGE
-        comboBox.setItems(SCHOOL_YEAR.EIGHTH_YEAR, SCHOOL_YEAR.NINTH_YEAR);
+        comboBox.setItems();
 
         Button addSchoolYearButton = new Button(VaadinIcon.PLUS.create());
         addSchoolYearButton.addClickListener(buttonClickEvent -> {

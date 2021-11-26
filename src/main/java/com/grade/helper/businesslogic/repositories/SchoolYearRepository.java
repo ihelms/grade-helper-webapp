@@ -1,6 +1,14 @@
 package com.grade.helper.businesslogic.repositories;
 
-public interface SchoolYearRepository {
+import com.grade.helper.businesslogic.entities.SchoolYearDAO;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    public void addSchoolYear();
+import java.util.List;
+
+@Repository
+public interface SchoolYearRepository extends JpaRepository<SchoolYearDAO, Long> {
+
+    List<SchoolYearDAO> findAllById(Long id);
+
 }

@@ -7,8 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<UserDAO, Long> {
 
-   /*
-   UserDAO getUserByNameAndPassword(@Param("username") String username,
-                                     @Param("password") String password);
-   */
+    //TODO: findUser()
 }

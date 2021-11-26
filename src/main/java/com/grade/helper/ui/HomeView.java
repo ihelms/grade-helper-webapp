@@ -10,7 +10,7 @@ import com.vaadin.flow.router.Route;
  */
 
 @Route(HomeView.HOME_VIEW)
-public class HomeView extends ApplicationView {
+public class HomeView extends HeaderView {
 
     final static String HOME_VIEW = "home";
 

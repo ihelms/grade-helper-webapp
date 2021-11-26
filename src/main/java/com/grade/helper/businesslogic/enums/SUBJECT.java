@@ -1,33 +1,34 @@
 package com.grade.helper.businesslogic.enums;
 
+import javax.persistence.*;
+
+@Entity
 public enum SUBJECT {
-    MATHEMATIK("Mathematik"),
-    PHYSIK("Physik"),
-    CHEMIE("Chemie"),
-    ERDKUNDE("Erdkunde"),
-    BIOLOGIE("Biologie"),
-    DEUTSCH("Deutsch"),
-    ENGLISCH("Englisch"),
-    FRANZOESISCH("Franzoesisch"),
-    SPANISCH("Spanisch"),
-    LATEIN("Latein"),
-    KUNST("Kunst"),
-    BWL("Betriebswirtschaftslehre"),
-    VWL("Volkswirtschaftslehre"),
-    PSYCHOLOGIE("Psychologie"),
-    SPORT("Sport");
+    MATHEMATIK,
+    PHYSIK,
+    CHEMIE,
+    ERDKUNDE,
+    BIOLOGIE,
+    DEUTSCH,
+    ENGLISCH,
+    FRANZOESISCH,
+    SPANISCH,
+    LATEIN,
+    KUNST,
+    BWL,
+    VWL,
+    PSYCHOLOGIE,
+    SPORT;
 
-    private String value;
+    @Id
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-    SUBJECT(String value) {
-        this.value = value;
+    public Long getId() {
+        return id;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

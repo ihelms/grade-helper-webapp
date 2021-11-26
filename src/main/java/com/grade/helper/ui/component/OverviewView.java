@@ -1,5 +1,6 @@
 package com.grade.helper.ui.component;
 
+import com.grade.helper.ui.HeaderView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
@@ -8,7 +9,7 @@ import com.vaadin.flow.router.Route;
  */
 
 @Route(OverviewView.OVERVIEW)
-public class OverviewView extends VerticalLayout {
+public class OverviewView extends HeaderView {
 
     final static String OVERVIEW = "overview";
 }

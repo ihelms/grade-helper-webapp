@@ -5,4 +5,5 @@ package com.grade.helper.ui.login;
  */
 
 public class RegistrationView {
+
 }

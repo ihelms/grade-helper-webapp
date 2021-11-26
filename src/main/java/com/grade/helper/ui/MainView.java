@@ -1,6 +1,5 @@
 package com.grade.helper.ui;
 
-import com.grade.helper.ui.login.LoginView;
 import com.vaadin.flow.router.*;
 
 /**
@@ -8,7 +7,7 @@ import com.vaadin.flow.router.*;
  */
 
 @Route
-public class MainView implements BeforeEnterObserver {
+public class MainView extends HeaderView implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {

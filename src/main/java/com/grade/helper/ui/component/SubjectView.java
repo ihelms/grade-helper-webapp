@@ -1,13 +1,16 @@
 package com.grade.helper.ui.component;
 
 import com.grade.helper.businesslogic.entities.GradeDAO;
+import com.grade.helper.businesslogic.enums.SUBJECT;
+import com.grade.helper.businesslogic.logic.GradeLogic;
 import com.grade.helper.ui.HeaderView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 
 import java.util.Set;
 
@@ -15,12 +18,18 @@ import java.util.Set;
  * created by ihelms on 25.11.2021
  */
 
-public class SchoolYearView extends HeaderView {
+@Route(SubjectView.SUBJECT_VIEW)
+public class SubjectView extends HeaderView {
 
-    private Set<GradeDAO> gradeDAOResourceSet;
+    final static String SUBJECT_VIEW = "subject";
 
-    public SchoolYearView(Set<GradeDAO> gradeDAOResourceSet) {
-        this.gradeDAOResourceSet = gradeDAOResourceSet;
+    private final Set<GradeDAO> gradeDAOResourceSet;
+
+    public SubjectView() {
+        String subjectName = String.valueOf(VaadinSession.getCurrent().getAttribute("subject"));
+        GradeLogic gradeLogic = new GradeLogic();
+        this.gradeDAOResourceSet =
+                gradeLogic.getGradesBySubjectAndYear(SUBJECT.valueOf(String.valueOf(subjectName)));
 
         setContent(setView());
     }
@@ -48,10 +57,12 @@ public class SchoolYearView extends HeaderView {
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("date");
-        grid.addComponentColumn(item -> new Button(VaadinIcon.TRASH.create(), click -> {
-                    gradeDAOResourceSet.remove(item);
-                    grid.getDataProvider().refreshAll();
-                }))
+        //TODO
+        grid.addComponentColumn(item -> new Button(VaadinIcon.TRASH.create(),
+                        click -> {
+                            gradeDAOResourceSet.remove(item);
+                            grid.getDataProvider().refreshAll();
+                        }))
                 .setWidth("10%");
 
         grid.setDataProvider(DataProvider.ofCollection(gradeDAOResourceSet));

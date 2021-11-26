@@ -1,40 +1,53 @@
 package com.grade.helper.ui;
 
-import com.grade.helper.businesslogic.entities.SchoolYearDAO;
+import com.grade.helper.businesslogic.enums.SUBJECT;
+import com.grade.helper.businesslogic.logic.SchoolYearLogic;
+import com.grade.helper.businesslogic.logic.SubjectLogic;
 import com.grade.helper.ui.component.OverviewView;
+import com.grade.helper.ui.component.SubjectView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 
-import static com.vaadin.flow.component.orderedlayout.FlexComponent.*;
+import java.util.List;
+
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 
 /**
  * created by ihelms on 18.11.2021
  */
 
 public abstract class HeaderView extends AppLayout {
+
     public static String TITLE = "Grade Helper";
 
     public HeaderView() {
+        SchoolYearLogic schoolYearLogic = new SchoolYearLogic();
+
         Anchor logo = new Anchor("/home", TITLE);
         Anchor logout = new Anchor("logout", "Log out");
+        logout.setWidthFull();
 
-        ComboBox<SchoolYearDAO> comboBox = new ComboBox<>("");
+        ComboBox<String> comboBox = new ComboBox<>("");
+        comboBox.setWidth("25%");
         comboBox.setClearButtonVisible(true);
-
-        //TODO: CHANGE
-        comboBox.setItems();
+        comboBox.setItems(schoolYearLogic.getSchoolYearValuesByUser());
+        comboBox.addValueChangeListener(valueChanged ->
+                VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue()));
+        if (VaadinSession.getCurrent().getAttribute("school_year") != null) {
+            comboBox.setValue(VaadinSession.getCurrent().getAttribute("school_year").toString());
+        }
 
         Button addSchoolYearButton = new Button(VaadinIcon.PLUS.create());
-        addSchoolYearButton.addClickListener(buttonClickEvent -> {
-            //TODO: ADD SCHOOL_YEAR
-        });
+        addSchoolYearButton.addClickListener(buttonClickEvent -> schoolYearLogic.openAddSchoolYearWindow());
 
         HorizontalLayout leftSideHorizontalLayout = new HorizontalLayout(new DrawerToggle(), logo);
         leftSideHorizontalLayout.setWidthFull();
@@ -50,11 +63,35 @@ public abstract class HeaderView extends AppLayout {
         header.setWidthFull();
         header.addClassName("header");
 
-        //RouterLinks
+        addToNavbar(header);
+        addToDrawer(new VerticalLayout(getDrawerRouterLinks()));
+    }
+
+    private VerticalLayout getDrawerRouterLinks() {
+        VerticalLayout drawerLayout = new VerticalLayout();
+        drawerLayout.setWidthFull();
+        drawerLayout.setHeight("85%");
+
         RouterLink overviewLink = new RouterLink("Übersicht", OverviewView.class);
         overviewLink.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToNavbar(header);
-        addToDrawer(new VerticalLayout(overviewLink));
+        drawerLayout.addAndExpand(overviewLink);
+
+        SubjectLogic subjectLogic = new SubjectLogic();
+        List<SUBJECT> subjectList = subjectLogic.getSubjectForSchoolYear();
+        for(SUBJECT item: subjectList) {
+            VaadinSession.getCurrent().setAttribute("subject", item.toString());
+
+            RouterLink subjectRouterLink = new RouterLink(item.toString(), SubjectView.class);
+            subjectRouterLink.setHighlightCondition(HighlightConditions.sameLocation());
+            drawerLayout.addAndExpand(subjectRouterLink);
+        }
+
+        Button addSubjectButton = new Button("Schulfach hinzufügen");
+
+        VerticalLayout buttonLayout = new VerticalLayout(addSubjectButton);
+        buttonLayout.setHeight("15%");
+
+        return new VerticalLayout(drawerLayout, buttonLayout);
     }
 }

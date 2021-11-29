@@ -47,7 +47,7 @@ public class SubjectView extends HeaderView {
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("grade");
-        Grid.Column<GradeDAO> gradePriorisationColumn = grid.addColumn(GradeDAO::getPrioritisation)
+        Grid.Column<GradeDAO> gradePrioritisationColumn = grid.addColumn(GradeDAO::getPrioritisation)
                 .setHeader("Gewichtung")
                 .setSortable(true)
                 .setAutoWidth(true)

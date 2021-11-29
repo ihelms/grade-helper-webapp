@@ -5,6 +5,7 @@ import com.grade.helper.businesslogic.logic.SchoolYearLogic;
 import com.grade.helper.businesslogic.logic.SubjectLogic;
 import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.SubjectView;
+import com.grade.helper.ui.windows.SchoolYearWindow;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -88,6 +89,10 @@ public abstract class HeaderView extends AppLayout {
         }
 
         Button addSubjectButton = new Button("Schulfach hinzufügen");
+        addSubjectButton.addClickListener(buttonClickEvent -> {
+            SchoolYearWindow schoolYearWindow = new SchoolYearWindow();
+            schoolYearWindow.open();
+        });
 
         VerticalLayout buttonLayout = new VerticalLayout(addSubjectButton);
         buttonLayout.setHeight("15%");

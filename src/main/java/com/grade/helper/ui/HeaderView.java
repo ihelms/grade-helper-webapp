@@ -5,6 +5,7 @@ import com.grade.helper.businesslogic.logic.SchoolYearLogic;
 import com.grade.helper.businesslogic.logic.SubjectLogic;
 import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.SubjectView;
+import com.grade.helper.ui.windows.ConfigurationWindow;
 import com.grade.helper.ui.windows.SchoolYearWindow;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -34,8 +35,6 @@ public abstract class HeaderView extends AppLayout {
         SchoolYearLogic schoolYearLogic = new SchoolYearLogic();
 
         Anchor logo = new Anchor("/home", TITLE);
-        Anchor logout = new Anchor("logout", "Log out");
-        logout.setWidthFull();
 
         ComboBox<String> comboBox = new ComboBox<>("");
         comboBox.setWidth("25%");
@@ -57,9 +56,13 @@ public abstract class HeaderView extends AppLayout {
         HorizontalLayout schoolYearHorizontalLayout = new HorizontalLayout(comboBox, addSchoolYearButton);
         schoolYearHorizontalLayout.setWidthFull();
 
-        HorizontalLayout userLayout = new HorizontalLayout(logout);
+        Button userProfileButton = new Button(VaadinIcon.USER.create());
+        userProfileButton.addClickListener(buttonClickEvent -> {
+            ConfigurationWindow configurationWindow = new ConfigurationWindow();
+            configurationWindow.open();
+        });
 
-        HorizontalLayout header = new HorizontalLayout(leftSideHorizontalLayout, schoolYearHorizontalLayout, userLayout);
+        HorizontalLayout header = new HorizontalLayout(leftSideHorizontalLayout, schoolYearHorizontalLayout, userProfileButton);
         header.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         header.setWidthFull();
         header.addClassName("header");

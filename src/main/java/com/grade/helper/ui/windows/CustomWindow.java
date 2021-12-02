@@ -1,21 +1,23 @@
 package com.grade.helper.ui.windows;
 
-import com.grade.helper.businesslogic.enums.SUBJECT;
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 /**
  * created by ihelms on 30.11.2021
  */
 
-public class CustomWindow extends Dialog {
-    VerticalLayout contentLayout;
+public abstract class CustomWindow extends Dialog {
+
+    private final VerticalLayout contentLayout;
+    private final Button addButton;
+    private final Footer footer;
 
     public CustomWindow(String title) {
         super();
@@ -28,30 +30,37 @@ public class CustomWindow extends Dialog {
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         close.addClickListener((event) -> this.close());
 
-        Header header = new Header(new H3(title), close);
+        Header header = new Header(new HorizontalLayout(new H3(title), close));
         header.setWidthFull();
 
-        ComboBox<SUBJECT> comboBox = new ComboBox<>("Schulfach");
-        comboBox.setItems(SUBJECT.values());
+        addButton = new Button("Hinzufügen");
 
-        Button buttonAdd = new Button("Hinzufügen");
-        buttonAdd.addClickListener(buttonClickEvent -> {
-            //TODO
-        });
+        Button cancelButton = new Button("Abbrechen");
+        cancelButton.addClickListener(buttonClickEvent -> this.close());
 
-        Button buttonCancel = new Button("Abbrechen");
-        buttonCancel.addClickListener(buttonClickEvent -> this.close());
+        footer = new Footer();
+        footer.add(addButton, cancelButton);
+        footer.setWidthFull();
 
-        Footer footer = new Footer();
-        footer.add(buttonAdd, buttonCancel);
-
-        contentLayout.add(header);
-        add(contentLayout);
+        VerticalLayout windowLayout = new VerticalLayout();
+        windowLayout.add(header, contentLayout, footer);
+        add(windowLayout);
     }
 
-    public void setContent(Component ... components) {
+    public void setContent(Component... components) {
         contentLayout.add(components);
-        add(contentLayout);
+    }
+
+    public void addClickListenerToAddButton(ComponentEventListener<ClickEvent<Button>> listener) {
+        this.addButton.addClickListener(listener);
+    }
+
+    public void setAddButtonText(String text) {
+        this.addButton.setText(text);
+    }
+
+    public void addButton(Button button) {
+        this.footer.add(button);
     }
 
 }

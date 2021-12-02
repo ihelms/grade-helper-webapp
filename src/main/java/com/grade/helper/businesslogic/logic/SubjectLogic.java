@@ -13,4 +13,8 @@ public class SubjectLogic {
     public List<SUBJECT> getSubjectForSchoolYear() {
         return List.of(SUBJECT.BIOLOGIE, SUBJECT.BWL);
     }
+
+    public void addSubject(SUBJECT subject) {
+        //TODO
+    }
 }

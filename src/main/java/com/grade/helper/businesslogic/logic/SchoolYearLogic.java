@@ -26,7 +26,7 @@ public class SchoolYearLogic {
         return schoolYearDAOSet;
     }
 
-    public void openAddSchoolYearWindow() {
+    public void addSchoolYear(SchoolYearDAO schoolYearDAO) {
         //TODO
     }
 }

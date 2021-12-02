@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * created by ihelms on 25.11.2021
  */
 
-@SuppressWarnings("JpaDataSourceORMInspection")
+@SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
 @Entity
 public class GradeDAO {
 

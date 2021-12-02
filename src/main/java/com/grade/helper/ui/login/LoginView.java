@@ -1,12 +1,9 @@
 package com.grade.helper.ui.login;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 
 /**
@@ -32,7 +29,10 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         loginForm.setAction("login");
         loginForm.setForgotPasswordButtonVisible(false);
-        add(new H1("Login"), loginForm);
+
+        RouterLink subjectRouterLink = new RouterLink("Registrieren", RegistrationView.class);
+
+        add(new H1("Login"), loginForm, subjectRouterLink);
     }
 
     @Override

@@ -12,6 +12,7 @@ public class MainView extends HeaderView implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         beforeEnterEvent.forwardTo(HomeView.class);
+
         //TODO: Uncomment
         //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //beforeEnterEvent.forwardTo(authentication != null ? HomeView.class : LoginView.class);

@@ -5,8 +5,7 @@ import com.grade.helper.businesslogic.logic.SchoolYearLogic;
 import com.grade.helper.businesslogic.logic.SubjectLogic;
 import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.SubjectView;
-import com.grade.helper.ui.windows.ConfigurationWindow;
-import com.grade.helper.ui.windows.SchoolYearWindow;
+import com.grade.helper.ui.windows.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -47,7 +46,10 @@ public abstract class HeaderView extends AppLayout {
         }
 
         Button addSchoolYearButton = new Button(VaadinIcon.PLUS.create());
-        addSchoolYearButton.addClickListener(buttonClickEvent -> schoolYearLogic.openAddSchoolYearWindow());
+        addSchoolYearButton.addClickListener(buttonClickEvent -> {
+            AddSchoolYearWindow addSchoolYearWindow = new AddSchoolYearWindow();
+            addSchoolYearWindow.open();
+        });
 
         HorizontalLayout leftSideHorizontalLayout = new HorizontalLayout(new DrawerToggle(), logo);
         leftSideHorizontalLayout.setWidthFull();
@@ -65,6 +67,7 @@ public abstract class HeaderView extends AppLayout {
         HorizontalLayout header = new HorizontalLayout(leftSideHorizontalLayout, schoolYearHorizontalLayout, userProfileButton);
         header.setDefaultVerticalComponentAlignment(Alignment.CENTER);
         header.setWidthFull();
+        header.setHeight("25%");
         header.addClassName("header");
 
         addToNavbar(header);
@@ -83,7 +86,7 @@ public abstract class HeaderView extends AppLayout {
 
         SubjectLogic subjectLogic = new SubjectLogic();
         List<SUBJECT> subjectList = subjectLogic.getSubjectForSchoolYear();
-        for(SUBJECT item: subjectList) {
+        for (SUBJECT item : subjectList) {
             VaadinSession.getCurrent().setAttribute("subject", item.toString());
 
             RouterLink subjectRouterLink = new RouterLink(item.toString(), SubjectView.class);
@@ -93,11 +96,11 @@ public abstract class HeaderView extends AppLayout {
 
         Button addSubjectButton = new Button("Schulfach hinzufügen");
         addSubjectButton.addClickListener(buttonClickEvent -> {
-            SchoolYearWindow schoolYearWindow = new SchoolYearWindow();
-            schoolYearWindow.open();
+            AddSubjectWindow addSubjectWindow = new AddSubjectWindow();
+            addSubjectWindow.open();
         });
 
-        VerticalLayout buttonLayout = new VerticalLayout(addSubjectButton);
+        HorizontalLayout buttonLayout = new HorizontalLayout(addSubjectButton);
         buttonLayout.setHeight("15%");
 
         return new VerticalLayout(drawerLayout, buttonLayout);

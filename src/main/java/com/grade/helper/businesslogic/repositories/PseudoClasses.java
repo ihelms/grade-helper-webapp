@@ -1,9 +1,9 @@
 package com.grade.helper.businesslogic.repositories;
 
 import com.grade.helper.businesslogic.entities.GradeDAO;
-import com.grade.helper.businesslogic.entities.SchoolYearDAO;
 import com.grade.helper.businesslogic.enums.GRADE_TYPE;
 import com.grade.helper.businesslogic.enums.SUBJECT;
+import com.grade.helper.businesslogic.resource.SubjectAverage;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -16,18 +16,6 @@ import java.util.Set;
 
 public class PseudoClasses {
 
-    public List<SchoolYearDAO> getSchoolYears() {
-        SchoolYearDAO schoolYearDAO_1 = new SchoolYearDAO();
-        schoolYearDAO_1.setId(1L);
-        schoolYearDAO_1.setValue("8. Klasse");
-
-        SchoolYearDAO schoolYearDAO_2 = new SchoolYearDAO();
-        schoolYearDAO_2.setId(2L);
-        schoolYearDAO_2.setValue("9. Klasse");
-
-        return List.of(schoolYearDAO_1, schoolYearDAO_2);
-    }
-
     public List<String> getSchoolYearValues() {
         return List.of("8.Klasse", "9.Klasse");
     }
@@ -38,9 +26,22 @@ public class PseudoClasses {
             gradeDAO.setId(1L);
             gradeDAO.setDate(Timestamp.from(Instant.now()));
             gradeDAO.setGrade_type(GRADE_TYPE.KLAUSUR);
+            gradeDAO.setGrade(1);
+            gradeDAO.setPrioritisation(12.5);
+            gradeDAO.setSubject(subject);
 
             return Set.of(gradeDAO);
         }
         return Set.of(new GradeDAO());
+    }
+
+    public Set<SubjectAverage> getSubjectAverage() {
+        SubjectAverage subjectAverage = new SubjectAverage();
+        subjectAverage.setAverage(1.2);
+        subjectAverage.setSubject(SUBJECT.BWL);
+        SubjectAverage subjectAverage2 = new SubjectAverage();
+        subjectAverage2.setAverage(2.3);
+        subjectAverage2.setSubject(SUBJECT.BIOLOGIE);
+        return Set.of(subjectAverage, subjectAverage2);
     }
 }

@@ -1,5 +1,6 @@
 package com.grade.helper.ui.component;
 
+import com.grade.helper.businesslogic.logic.SchoolYearService;
 import com.grade.helper.businesslogic.logic.SubjectAverageLogic;
 import com.grade.helper.businesslogic.resource.SubjectAverage;
 import com.grade.helper.ui.HeaderView;
@@ -7,6 +8,9 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 
@@ -16,11 +20,15 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 @Route(OverviewView.OVERVIEW)
+@SpringComponent
+@UIScope
 public class OverviewView extends HeaderView {
 
     final static String OVERVIEW = "overview";
 
-    public OverviewView() {
+    @Autowired
+    public OverviewView(SchoolYearService schoolYearService) {
+        super(schoolYearService);
         SubjectAverageLogic subjectAverageLogic = new SubjectAverageLogic();
         Set<SubjectAverage> subjectAverageSet = subjectAverageLogic.getSubjectAverageForSchoolYear();
 

@@ -3,7 +3,8 @@ package com.grade.helper.ui.component;
 import com.grade.helper.businesslogic.entities.GradeDAO;
 import com.grade.helper.businesslogic.enums.GRADE_TYPE;
 import com.grade.helper.businesslogic.enums.SUBJECT;
-import com.grade.helper.businesslogic.logic.GradeLogic;
+import com.grade.helper.businesslogic.logic.GradeService;
+import com.grade.helper.businesslogic.logic.SchoolYearService;
 import com.grade.helper.ui.HeaderView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -18,6 +19,9 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +31,8 @@ import java.util.Set;
  */
 
 @Route(SubjectView.SUBJECT_VIEW)
+@SpringComponent
+@UIScope
 public class SubjectView extends HeaderView {
 
     final static String SUBJECT_VIEW = "subject";
@@ -45,12 +51,14 @@ public class SubjectView extends HeaderView {
     private TextField idTextField;
     private TextField dateTextField;
 
-    public SubjectView() {
+    @Autowired
+    public SubjectView(SchoolYearService schoolYearService, GradeService gradeService) {
+        super(schoolYearService);
+
         this.binder = new Binder<>();
-        GradeLogic gradeLogic = new GradeLogic();
 
         String subjectName = String.valueOf(VaadinSession.getCurrent().getAttribute("subject"));
-        this.gradeDAOResourceSet = gradeLogic.getGradesBySubjectAndYear(SUBJECT.valueOf(String.valueOf(subjectName)));
+        this.gradeDAOResourceSet = gradeService.getGradesBySubjectAndYear(SUBJECT.valueOf(String.valueOf(subjectName)));
 
         setContent(setView());
     }

@@ -1,7 +1,7 @@
 package com.grade.helper.ui;
 
 import com.grade.helper.businesslogic.enums.SUBJECT;
-import com.grade.helper.businesslogic.logic.SchoolYearLogic;
+import com.grade.helper.businesslogic.logic.SchoolYearService;
 import com.grade.helper.businesslogic.logic.SubjectLogic;
 import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.SubjectView;
@@ -25,20 +25,17 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 /**
  * created by ihelms on 18.11.2021
  */
-
 public abstract class HeaderView extends AppLayout {
 
     public static String TITLE = "Grade Helper";
 
-    public HeaderView() {
-        SchoolYearLogic schoolYearLogic = new SchoolYearLogic();
-
+    public HeaderView(SchoolYearService schoolYearService) {
         Anchor logo = new Anchor("/home", TITLE);
 
         ComboBox<String> comboBox = new ComboBox<>("");
         comboBox.setWidth("25%");
         comboBox.setClearButtonVisible(true);
-        comboBox.setItems(schoolYearLogic.getSchoolYearValuesByUser());
+        comboBox.setItems(schoolYearService.getSchoolYearValuesByUser());
         comboBox.addValueChangeListener(valueChanged ->
                 VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue()));
         if (VaadinSession.getCurrent().getAttribute("school_year") != null) {
@@ -47,7 +44,7 @@ public abstract class HeaderView extends AppLayout {
 
         Button addSchoolYearButton = new Button(VaadinIcon.PLUS.create());
         addSchoolYearButton.addClickListener(buttonClickEvent -> {
-            AddSchoolYearWindow addSchoolYearWindow = new AddSchoolYearWindow();
+            AddSchoolYearWindow addSchoolYearWindow = new AddSchoolYearWindow(schoolYearService);
             addSchoolYearWindow.open();
         });
 

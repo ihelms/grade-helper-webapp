@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<UserDAO, Long> {
 
     //TODO: findUserByUsername(@Param("username") String username);
+    //TODO: changePasswordOfUser();
 }

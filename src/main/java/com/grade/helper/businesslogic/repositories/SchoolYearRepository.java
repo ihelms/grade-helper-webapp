@@ -13,4 +13,7 @@ public interface SchoolYearRepository extends JpaRepository<SchoolYearDAO, Long>
 
     //void addSchoolYear(SchoolYearDAO schoolYearDAO);
 
+    @Override
+    List<SchoolYearDAO> findAll();
+
 }

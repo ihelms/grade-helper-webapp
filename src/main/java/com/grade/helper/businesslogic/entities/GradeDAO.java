@@ -94,4 +94,16 @@ public class GradeDAO {
                 ", subject=" + subject +
                 '}';
     }
+
+    public GradeDAO() {
+    }
+
+    public GradeDAO(Long id, GRADE_TYPE grade_type, Integer grade, Double prioritisation, Timestamp date, SUBJECT subject) {
+        this.id = id;
+        this.grade_type = grade_type;
+        this.grade = grade;
+        this.prioritisation = prioritisation;
+        this.date = date;
+        this.subject = subject;
+    }
 }

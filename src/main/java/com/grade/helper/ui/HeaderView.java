@@ -2,7 +2,7 @@ package com.grade.helper.ui;
 
 import com.grade.helper.businesslogic.enums.SUBJECT;
 import com.grade.helper.businesslogic.logic.SchoolYearService;
-import com.grade.helper.businesslogic.logic.SubjectLogic;
+import com.grade.helper.businesslogic.logic.SubjectService;
 import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.SubjectView;
 import com.grade.helper.ui.windows.*;
@@ -81,8 +81,8 @@ public abstract class HeaderView extends AppLayout {
 
         drawerLayout.addAndExpand(overviewLink);
 
-        SubjectLogic subjectLogic = new SubjectLogic();
-        List<SUBJECT> subjectList = subjectLogic.getSubjectForSchoolYear();
+        SubjectService subjectService = new SubjectService();
+        List<SUBJECT> subjectList = subjectService.getSubjectForSchoolYear();
         for (SUBJECT item : subjectList) {
             VaadinSession.getCurrent().setAttribute("subject", item.toString());
 

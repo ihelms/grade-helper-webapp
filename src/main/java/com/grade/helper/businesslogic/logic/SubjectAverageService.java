@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  */
 
 @Service
-public class SubjectAverageLogic {
+public class SubjectAverageService {
 
     public Set<SubjectAverage> getSubjectAverageForSchoolYear() {
         PseudoClasses pseudoClasses = new PseudoClasses();

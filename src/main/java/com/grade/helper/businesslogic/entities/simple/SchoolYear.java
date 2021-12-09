@@ -1,10 +1,11 @@
-package com.grade.helper.businesslogic.entities;
+package com.grade.helper.businesslogic.entities.simple;
 
 import javax.persistence.*;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
+@SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
 @Entity
-public class SchoolYearDAO {
+public class SchoolYear {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -26,6 +27,14 @@ public class SchoolYearDAO {
     }
 
     public void setValue(String value) {
+        this.value = value;
+    }
+
+    public SchoolYear() {
+    }
+
+    public SchoolYear(Long id, String value) {
+        this.id = id;
         this.value = value;
     }
 

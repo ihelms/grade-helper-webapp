@@ -1,4 +1,4 @@
-package com.grade.helper.businesslogic.entities;
+package com.grade.helper.businesslogic.entities.simple;
 
 import javax.persistence.*;
 
@@ -8,8 +8,10 @@ import javax.persistence.*;
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
 @Entity
-public class UserDAO {
+public class User {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -62,6 +64,16 @@ public class UserDAO {
     }
 
     public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public User() {
+    }
+
+    public User(String username, String password, String firstName, String lastName) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
         this.lastName = lastName;
     }
 

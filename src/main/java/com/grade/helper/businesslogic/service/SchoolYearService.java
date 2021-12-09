@@ -1,9 +1,7 @@
-package com.grade.helper.businesslogic.logic;
+package com.grade.helper.businesslogic.service;
 
-import com.grade.helper.businesslogic.entities.SchoolYearDAO;
-import com.grade.helper.businesslogic.repositories.PseudoClasses;
+import com.grade.helper.businesslogic.entities.simple.SchoolYear;
 import com.grade.helper.businesslogic.repositories.SchoolYearRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,35 +15,32 @@ import java.util.stream.Stream;
 
 @Service
 public class SchoolYearService {
-    PseudoClasses pseudoClasses;
     SchoolYearRepository schoolYearRepository;
 
     public SchoolYearService(SchoolYearRepository schoolYearRepository) {
         this.schoolYearRepository = schoolYearRepository;
-        this.pseudoClasses = new PseudoClasses();
     }
 
     public Set<String> getSchoolYearValuesByUser() {
-        Set<String> schoolYearDAOSet = new HashSet<>();
-
-        //TODO: Repo-Aufruf
-        schoolYearDAOSet.addAll(pseudoClasses.getSchoolYearValues());
-
-        return schoolYearDAOSet;
+        return new HashSet<>();
     }
 
-    public List<String> getAllSchoolYears() {
+    public List<String> getAllSchoolYearsAsString() {
         List<String> schoolYearName = new LinkedList<>();
 
-        List<SchoolYearDAO> schoolYearDAOList = schoolYearRepository.findAll();
-        schoolYearDAOList.forEach(schoolYearDAO -> schoolYearName.add(schoolYearDAO.getValue()));
+        List<SchoolYear> schoolYearList = schoolYearRepository.findAll();
+        schoolYearList.forEach(schoolYearDAO -> schoolYearName.add(schoolYearDAO.getValue()));
 
         return schoolYearName;
     }
 
-    public void addSchoolYear(SchoolYearDAO schoolYearDAO) {
-        //TODO
-        //schoolYearRepository.addSchoolYear(SchoolYearDAO schoolYearDAO);
+    public SchoolYear getSchoolYearByValue(String schoolYear) {
+        return schoolYearRepository.findSchoolYearDAOByValue(schoolYear);
+    }
+
+    public void addSchoolYear(SchoolYear schoolYear) {
+
+
     }
 
     //generating test data
@@ -65,9 +60,9 @@ public class SchoolYearService {
                             "9. Klasse",
                             "10. Klasse"
                     ).map(name -> {
-                        SchoolYearDAO customer = new SchoolYearDAO();
-                        customer.setValue(name);
-                        return customer;
+                        SchoolYear schoolYear = new SchoolYear();
+                        schoolYear.setValue(name);
+                        return schoolYear;
                     }).collect(Collectors.toList())
             );
         }

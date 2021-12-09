@@ -1,40 +1,28 @@
 package com.grade.helper.ui.windows;
 
-import com.grade.helper.ui.login.LogoutView;
-import com.vaadin.flow.component.UI;
+import com.grade.helper.businesslogic.service.UserService;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.server.VaadinService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 
-/**
- * created by ihelms on 30.11.2021
- */
 
 public class ConfigurationWindow extends CustomWindow {
 
-    public ConfigurationWindow() {
+    public ConfigurationWindow(UserService userService) {
         super("Benutzereinstellungen");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        TextField username = new TextField();
+        username.setValue(userService.getAuthenticatedUser().getUsername());
+        username.setEnabled(false);
+        username.setWidth("250px");
 
-        Label username;
-        if (authentication != null) {
-            username = new Label(authentication.getName());
-        } else {
-            username = new Label("<Username>");
-        }
-
-        Button buttonLogout = new Button("Ausloggen");
-        buttonLogout.addClickListener(buttonClickEvent -> {
-            UI.getCurrent().getSession().close();
-            VaadinService.getCurrentRequest().getWrappedSession().invalidate();
-            UI.getCurrent().navigate(LogoutView.class);
+        Button changePassword = new Button("Passwort ändern");
+        changePassword.setWidth("250px");
+        changePassword.addClickListener(buttonClickEvent -> {
+            ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow();
+            changePasswordWindow.open();
         });
 
-        addButton(buttonLogout);
-        setAddButtonText("Passwort ändern");
-        setContent(username);
+        setContent(new VerticalLayout(username, changePassword));
     }
 }

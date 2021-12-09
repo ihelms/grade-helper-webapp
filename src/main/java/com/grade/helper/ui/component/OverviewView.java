@@ -1,7 +1,6 @@
 package com.grade.helper.ui.component;
 
-import com.grade.helper.businesslogic.logic.SchoolYearService;
-import com.grade.helper.businesslogic.logic.SubjectAverageService;
+import com.grade.helper.businesslogic.service.*;
 import com.grade.helper.businesslogic.resource.SubjectAverage;
 import com.grade.helper.ui.HeaderView;
 import com.vaadin.flow.component.grid.Grid;
@@ -27,8 +26,11 @@ public class OverviewView extends HeaderView {
     final static String OVERVIEW = "overview";
 
     @Autowired
-    public OverviewView(SchoolYearService schoolYearService) {
-        super(schoolYearService);
+    public OverviewView(SchoolYearService schoolYearService,
+                        SubjectService subjectService,
+                        UserGradeService userGradeService,
+                        UserService userService) {
+        super(schoolYearService, subjectService, userGradeService, userService);
         SubjectAverageService subjectAverageService = new SubjectAverageService();
         Set<SubjectAverage> subjectAverageSet = subjectAverageService.getSubjectAverageForSchoolYear();
 

@@ -1,14 +1,16 @@
 package com.grade.helper.businesslogic.repositories;
 
-import com.grade.helper.businesslogic.entities.GradeDAO;
-import com.grade.helper.businesslogic.enums.SUBJECT;
+import com.grade.helper.businesslogic.entities.simple.Grade;
+import com.grade.helper.businesslogic.entities.simple.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface GradeRepository extends JpaRepository<GradeDAO, Long> {
+public interface GradeRepository extends JpaRepository<Grade, Long> {
 
-    List<GradeDAO> findAllBySubject(SUBJECT subject);
+    List<Grade> findAllBySubject(Subject subject);
+
+    Grade findGradeDAOById(Long id);
 }

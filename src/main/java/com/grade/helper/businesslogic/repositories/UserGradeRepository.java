@@ -1,11 +1,17 @@
 package com.grade.helper.businesslogic.repositories;
 
-import com.grade.helper.businesslogic.entities.UserGradeDAO;
+import com.grade.helper.businesslogic.entities.joined.UserGrade;
+import com.grade.helper.businesslogic.entities.simple.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserGradeRepository extends JpaRepository<UserGradeDAO, Long> {
+import java.util.List;
 
-    //Object getSchoolYearsByUserId();
+@Repository
+public interface UserGradeRepository extends JpaRepository<UserGrade, Long> {
+
+    List<UserGrade> getUserGradeDAOSByUserId(User userId);
+
+    @Override
+    <S extends UserGrade> S save(S s);
 }

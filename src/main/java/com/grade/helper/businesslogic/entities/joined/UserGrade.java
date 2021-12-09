@@ -1,4 +1,6 @@
-package com.grade.helper.businesslogic.entities;
+package com.grade.helper.businesslogic.entities.joined;
+
+import com.grade.helper.businesslogic.entities.simple.*;
 
 import javax.persistence.*;
 
@@ -8,23 +10,24 @@ import javax.persistence.*;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
-public class UserGradeDAO {
+public class UserGrade {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
-    private UserDAO userId;
+    private User userId;
 
     @OneToOne
     @JoinColumn(name = "schoolYearId", referencedColumnName = "id")
-    private SchoolYearDAO schoolYearDAOId;
+    private SchoolYear schoolYearId;
 
     @OneToOne
     @JoinColumn(name = "gradeId", referencedColumnName = "id")
-    private GradeDAO gradeId;
+    private Grade gradeId;
 
     public Long getId() {
         return id;
@@ -34,27 +37,36 @@ public class UserGradeDAO {
         this.id = id;
     }
 
-    public UserDAO getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(UserDAO userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 
-    public SchoolYearDAO getSchoolYearId() {
-        return schoolYearDAOId;
+    public SchoolYear getSchoolYearId() {
+        return schoolYearId;
     }
 
-    public void setSchoolYearId(SchoolYearDAO schoolYearDAOId) {
-        this.schoolYearDAOId = schoolYearDAOId;
+    public void setSchoolYearId(SchoolYear schoolYearId) {
+        this.schoolYearId = schoolYearId;
     }
 
-    public GradeDAO getGradeId() {
+    public Grade getGradeId() {
         return gradeId;
     }
 
-    public void setGradeId(GradeDAO gradeId) {
+    public void setGradeId(Grade gradeId) {
+        this.gradeId = gradeId;
+    }
+
+    public UserGrade() {
+    }
+
+    public UserGrade(User userId, SchoolYear schoolYearId, Grade gradeId) {
+        this.userId = userId;
+        this.schoolYearId = schoolYearId;
         this.gradeId = gradeId;
     }
 
@@ -63,7 +75,7 @@ public class UserGradeDAO {
         return "UserGradeDAO{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", schoolYearId=" + schoolYearDAOId +
+                ", schoolYearId=" + schoolYearId +
                 ", gradeId=" + gradeId +
                 '}';
     }

@@ -1,7 +1,4 @@
-package com.grade.helper.businesslogic.entities;
-
-import com.grade.helper.businesslogic.enums.GRADE_TYPE;
-import com.grade.helper.businesslogic.enums.SUBJECT;
+package com.grade.helper.businesslogic.entities.simple;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,15 +9,16 @@ import java.sql.Timestamp;
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
 @Entity
-public class GradeDAO {
+public class Grade {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "grade_type", referencedColumnName = "id")
-    private GRADE_TYPE grade_type;
+    private GradeType gradeType;
 
     @Column(name = "grade")
     private Integer grade;
@@ -33,7 +31,7 @@ public class GradeDAO {
 
     @OneToOne
     @JoinColumn(name = "subject", referencedColumnName = "id")
-    private SUBJECT subject;
+    private Subject subject;
 
     public Long getId() {
         return id;
@@ -43,12 +41,12 @@ public class GradeDAO {
         this.id = id;
     }
 
-    public GRADE_TYPE getGrade_type() {
-        return grade_type;
+    public GradeType getGrade_type() {
+        return gradeType;
     }
 
-    public void setGrade_type(GRADE_TYPE grade_type) {
-        this.grade_type = grade_type;
+    public void setGrade_type(GradeType gradeType) {
+        this.gradeType = gradeType;
     }
 
     public Integer getGrade() {
@@ -75,11 +73,11 @@ public class GradeDAO {
         this.date = date;
     }
 
-    public SUBJECT getSubject() {
+    public Subject getSubject() {
         return subject;
     }
 
-    public void setSubject(SUBJECT subject) {
+    public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
@@ -87,7 +85,7 @@ public class GradeDAO {
     public String toString() {
         return "GradeDAO{" +
                 "id=" + id +
-                ", grade_type=" + grade_type +
+                ", grade_type=" + gradeType +
                 ", grade=" + grade +
                 ", prioritisation=" + prioritisation +
                 ", date=" + date +
@@ -95,12 +93,11 @@ public class GradeDAO {
                 '}';
     }
 
-    public GradeDAO() {
+    public Grade() {
     }
 
-    public GradeDAO(Long id, GRADE_TYPE grade_type, Integer grade, Double prioritisation, Timestamp date, SUBJECT subject) {
-        this.id = id;
-        this.grade_type = grade_type;
+    public Grade(GradeType gradeType, Integer grade, Double prioritisation, Timestamp date, Subject subject) {
+        this.gradeType = gradeType;
         this.grade = grade;
         this.prioritisation = prioritisation;
         this.date = date;

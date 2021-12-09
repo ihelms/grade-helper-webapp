@@ -5,11 +5,11 @@ import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 
-/**
- * created by ihelms on 18.11.2021
- */
-
+@SpringComponent
+@UIScope
 @Route("login")
 @PageTitle("Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {

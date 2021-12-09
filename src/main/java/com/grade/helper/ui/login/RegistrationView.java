@@ -1,26 +1,31 @@
 package com.grade.helper.ui.login;
 
-import com.grade.helper.businesslogic.entities.UserDAO;
+import com.grade.helper.businesslogic.entities.simple.User;
+import com.grade.helper.businesslogic.service.UserService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-
-/**
- * created by ihelms on 18.11.2021
- */
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Route("registration")
 @PageTitle("Registration")
+@UIScope
+@SpringComponent
 public class RegistrationView extends VerticalLayout {
 
-    public RegistrationView() {
-        UserDAO userDAO = new UserDAO();
-        Binder<UserDAO> binder = new Binder<>();
+    @Autowired
+    public RegistrationView(UserService userService) {
+        User user = new User();
+        Binder<User> binder = new Binder<>();
 
         H2 title = new H2("Registrieren");
 
@@ -31,32 +36,41 @@ public class RegistrationView extends VerticalLayout {
         PasswordField password = new PasswordField("Passwort");
         PasswordField passwordConfirmation = new PasswordField("Passwort wiederholen");
         passwordConfirmation.addValueChangeListener(valueChangeEvent -> {
-            if (!password.getValue().equals(passwordConfirmation.getValue())) {
-                //TODO
-                    passwordConfirmation.setErrorMessage("Passwörter nicht gleich.");
-            }
+            //TODO
         });
 
-        VerticalLayout fieldLayout = new VerticalLayout(username, firstName, lastName, password, passwordConfirmation);
-        fieldLayout.setHorizontalComponentAlignment(Alignment.CENTER);
+        VerticalLayout fieldLayout = new VerticalLayout(username, firstName,
+                lastName, password, passwordConfirmation);
 
         //Binder
         binder.forField(username)
-                .bind(UserDAO::getUsername, UserDAO::setUsername);
+                .bind(User::getUsername, User::setUsername);
         binder.forField(firstName)
-                .bind(UserDAO::getFirstName, UserDAO::setFirstName);
+                .bind(User::getFirstName, User::setFirstName);
         binder.forField(lastName)
-                .bind(UserDAO::getLastName, UserDAO::setLastName);
+                .bind(User::getLastName, User::setLastName);
         binder.forField(password)
-                .bind(UserDAO::getPassword, UserDAO::setPassword);
-        binder.readBean(userDAO);
+                .bind(User::getPassword, User::setPassword);
+        binder.readBean(user);
+
+        Notification notification = new Notification();
+        notification.setText("Error");
 
         Button registerButton = new Button("Registrieren");
         registerButton.addClickListener(buttonClickEvent -> {
-           //TODO
+            binder.writeBeanIfValid(user);
+            userService.saveUser(user);
+            if (userService.isNewUserSaved(user)) {
+                UI.getCurrent().navigate(LoginView.class);
+            } else {
+                notification.open();
+            }
         });
 
-        add(title, fieldLayout, registerButton);
+        VerticalLayout content = new VerticalLayout(title, fieldLayout, registerButton);
+        content.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+
+        addAndExpand(content);
     }
 
     private TextField createTextField(String title) {

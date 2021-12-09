@@ -1,19 +1,23 @@
 package com.grade.helper.businesslogic.repositories;
 
-import com.grade.helper.businesslogic.entities.SchoolYearDAO;
+import com.grade.helper.businesslogic.entities.simple.SchoolYear;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface SchoolYearRepository extends JpaRepository<SchoolYearDAO, Long> {
+public interface SchoolYearRepository extends JpaRepository<SchoolYear, Long> {
 
-    List<SchoolYearDAO> findAllById(Long id);
+    List<SchoolYear> findAllById(Long id);
+
+    SchoolYear findSchoolYearDAOById(Long id);
+
+    SchoolYear findSchoolYearDAOByValue(String value);
 
     //void addSchoolYear(SchoolYearDAO schoolYearDAO);
 
     @Override
-    List<SchoolYearDAO> findAll();
+    List<SchoolYear> findAll();
 
 }

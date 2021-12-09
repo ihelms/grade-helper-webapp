@@ -1,10 +1,8 @@
 package com.grade.helper.ui.component;
 
-import com.grade.helper.businesslogic.entities.GradeDAO;
-import com.grade.helper.businesslogic.enums.GRADE_TYPE;
-import com.grade.helper.businesslogic.enums.SUBJECT;
-import com.grade.helper.businesslogic.logic.GradeService;
-import com.grade.helper.businesslogic.logic.SchoolYearService;
+import com.grade.helper.businesslogic.entities.simple.Grade;
+import com.grade.helper.businesslogic.entities.simple.GradeType;
+import com.grade.helper.businesslogic.service.*;
 import com.grade.helper.ui.HeaderView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -23,8 +21,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * created by ihelms on 25.11.2021
@@ -37,13 +34,13 @@ public class SubjectView extends HeaderView {
 
     final static String SUBJECT_VIEW = "subject";
 
-    private final Binder<GradeDAO> binder;
+    private final Binder<Grade> binder;
 
-    private Grid<GradeDAO> grid;
-    private DataProvider<GradeDAO, ?> dataProvider;
+    private Grid<Grade> grid;
+    private DataProvider<Grade, ?> dataProvider;
 
-    private final Set<GradeDAO> gradeDAOResourceSet;
-    private GradeDAO selectedGrade;
+    private final Set<Grade> gradeResourceSet;
+    private Grade selectedGrade;
 
     private VerticalLayout editContainer;
     private Button newGradeButton;
@@ -51,21 +48,30 @@ public class SubjectView extends HeaderView {
     private TextField idTextField;
     private TextField dateTextField;
 
-    @Autowired
-    public SubjectView(SchoolYearService schoolYearService, GradeService gradeService) {
-        super(schoolYearService);
+    private final GradeService gradeService;
 
+    @Autowired
+    public SubjectView(SchoolYearService schoolYearService,
+                       SubjectService subjectService,
+                       UserGradeService userGradeService,
+                       GradeService gradeService,
+                       UserService userService) {
+        super(schoolYearService, subjectService, userGradeService, userService);
+
+        this.gradeService = gradeService;
         this.binder = new Binder<>();
 
         String subjectName = String.valueOf(VaadinSession.getCurrent().getAttribute("subject"));
-        this.gradeDAOResourceSet = gradeService.getGradesBySubjectAndYear(SUBJECT.valueOf(String.valueOf(subjectName)));
+
+        //TODO
+        this.gradeResourceSet = new HashSet<>();
 
         setContent(setView());
     }
 
     private VerticalLayout setView() {
         grid = new Grid<>();
-        dataProvider = DataProvider.ofCollection(gradeDAOResourceSet);
+        dataProvider = DataProvider.ofCollection(gradeResourceSet);
 
         editContainer = new VerticalLayout();
         editContainer.setSizeFull();
@@ -77,22 +83,22 @@ public class SubjectView extends HeaderView {
 
         createEditContainer();
 
-        Grid.Column<GradeDAO> gradeTypeColumn = grid.addColumn(GradeDAO::getGrade_type)
+        Grid.Column<Grade> gradeTypeColumn = grid.addColumn(Grade::getGrade_type)
                 .setHeader("Notenart")
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("gradeType");
-        Grid.Column<GradeDAO> gradeColumn = grid.addColumn(GradeDAO::getGrade)
+        Grid.Column<Grade> gradeColumn = grid.addColumn(Grade::getGrade)
                 .setHeader("Note")
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("grade");
-        Grid.Column<GradeDAO> gradePrioritisationColumn = grid.addColumn(GradeDAO::getPrioritisation)
+        Grid.Column<Grade> gradePrioritisationColumn = grid.addColumn(Grade::getPrioritisation)
                 .setHeader("Gewichtung")
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("gradePriorisation");
-        Grid.Column<GradeDAO> dateColumn = grid.addColumn(GradeDAO::getDate)
+        Grid.Column<Grade> dateColumn = grid.addColumn(Grade::getDate)
                 .setHeader("Datum")
                 .setSortable(true)
                 .setAutoWidth(true)
@@ -100,12 +106,12 @@ public class SubjectView extends HeaderView {
         grid.addComponentColumn(item -> new Button(VaadinIcon.TRASH.create(),
                         click -> {
                             //TODO
-                            gradeDAOResourceSet.remove(item);
+                            gradeResourceSet.remove(item);
                             grid.getDataProvider().refreshAll();
                         }))
                 .setWidth("10%");
 
-        grid.setDataProvider(DataProvider.ofCollection(gradeDAOResourceSet));
+        grid.setDataProvider(DataProvider.ofCollection(gradeResourceSet));
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.addSelectionListener(this::conditionSelected);
 
@@ -123,8 +129,8 @@ public class SubjectView extends HeaderView {
         idTextField.setReadOnly(true);
         idTextField.setWidth("500px");
 
-        ComboBox<GRADE_TYPE> gradeTypeComboBox = new ComboBox<>("Notentyp");
-        gradeTypeComboBox.setItems(GRADE_TYPE.values());
+        ComboBox<GradeType> gradeTypeComboBox = new ComboBox<>("Notentyp");
+        gradeTypeComboBox.setItems(gradeService.getAllGradeTypes());
         gradeTypeComboBox.setWidth("500px");
 
         ComboBox<Integer> gradeComboBox = new ComboBox<>("Note");
@@ -141,14 +147,14 @@ public class SubjectView extends HeaderView {
         //Binder
         binder.forField(idTextField)
                 .withConverter(new StringToLongConverter(idTextField.getValue()))
-                .bind(GradeDAO::getId, GradeDAO::setId);
+                .bind(Grade::getId, Grade::setId);
         binder.forField(gradeTypeComboBox)
-                .bind(GradeDAO::getGrade_type, GradeDAO::setGrade_type);
+                .bind(Grade::getGrade_type, Grade::setGrade_type);
         binder.forField(gradeComboBox)
-                .bind(GradeDAO::getGrade, GradeDAO::setGrade);
+                .bind(Grade::getGrade, Grade::setGrade);
         binder.forField(priorisationTextField)
                 .withConverter(new StringToDoubleConverter(priorisationTextField.getValue()))
-                .bind(GradeDAO::getPrioritisation, GradeDAO::setPrioritisation);
+                .bind(Grade::getPrioritisation, Grade::setPrioritisation);
         //binder.forField(dateTextField)
         //      .withConverter()
         //    .bind(GradeDAO::getDate, GradeDAO::setDate);
@@ -180,7 +186,7 @@ public class SubjectView extends HeaderView {
         editContainer.add(verticalLayout);
     }
 
-    private void conditionSelected(SelectionEvent<Grid<GradeDAO>, GradeDAO> selection) {
+    private void conditionSelected(SelectionEvent<Grid<Grade>, Grade> selection) {
         if (selection.getFirstSelectedItem().isPresent()) {
             selectedGrade = selection.getFirstSelectedItem().get();
             binder.readBean(selectedGrade);
@@ -198,16 +204,16 @@ public class SubjectView extends HeaderView {
     private void addGrade() {
         if (binder.validate().isOk()) {
             if (selectedGrade == null) {
-                GradeDAO gradeDAO = new GradeDAO();
-                binder.writeBeanIfValid(gradeDAO);
-                gradeDAOResourceSet.add(gradeDAO);
+                Grade grade = new Grade();
+                binder.writeBeanIfValid(grade);
+                gradeResourceSet.add(grade);
             } else {
-                gradeDAOResourceSet.remove(selectedGrade);
+                gradeResourceSet.remove(selectedGrade);
                 binder.writeBeanIfValid(selectedGrade);
-                gradeDAOResourceSet.add(selectedGrade);
+                gradeResourceSet.add(selectedGrade);
             }
             editContainer.setVisible(false);
-            dataProvider = DataProvider.ofCollection(gradeDAOResourceSet);
+            dataProvider = DataProvider.ofCollection(gradeResourceSet);
             grid.setDataProvider(dataProvider);
             grid.setHeightByRows(true);
             dataProvider.refreshAll();
@@ -229,8 +235,6 @@ public class SubjectView extends HeaderView {
         grid.deselectAll();
         binder.readBean(null);
 
-        idTextField.setValue("Auto-Generated");
-        dateTextField.setValue("Will be generated");
         addButton.setText("Hinzufügen");
 
         editContainer.setVisible(true);

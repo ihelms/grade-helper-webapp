@@ -34,6 +34,7 @@ public abstract class SubjectView extends HeaderView {
     private DataProvider<Grade, ?> dataProvider;
 
     private final Set<Grade> gradeResourceSet;
+    private final Set<Grade> lastYearGradeResourceSet;
     private Grade selectedGrade;
 
     private VerticalLayout editContainer;
@@ -61,14 +62,13 @@ public abstract class SubjectView extends HeaderView {
         UserSchoolYear currentUserSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(currentUser, selectedSchoolYear);
         Subject selectedSubject = subjectService.getSubjectOfSubjectEnum(subject);
         this.gradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, currentUserSchoolYear);
-
+        this.lastYearGradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, userSchoolYearService.findById(currentUserSchoolYear.getId() - 1));
         setContent(setView());
     }
 
     private VerticalLayout setView() {
         //TODO: HORIZONTALLAYOUT FOR IMPROVEMENT
         HorizontalLayout improvementLayout = new HorizontalLayout();
-
 
         grid = new Grid<>();
         dataProvider = DataProvider.ofCollection(gradeResourceSet);

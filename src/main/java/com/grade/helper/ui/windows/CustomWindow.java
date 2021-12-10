@@ -17,27 +17,26 @@ public abstract class CustomWindow extends Dialog {
         contentLayout = new VerticalLayout();
 
         setModal(true);
-        setWidth("50%");
+        setWidth("25%");
 
         H3 headerTitle = new H3(title);
         headerTitle.setWidthFull();
 
         HorizontalLayout header = new HorizontalLayout(headerTitle);
+        header.setAlignSelf(FlexComponent.Alignment.CENTER, headerTitle);
         header.setWidthFull();
-        header.setAlignSelf(FlexComponent.Alignment.START, headerTitle);
 
         addButton = new Button("Hinzufügen");
 
         Button cancelButton = new Button("Abbrechen");
         cancelButton.addClickListener(buttonClickEvent -> this.close());
 
-        HorizontalLayout footer = new HorizontalLayout();
-        footer.add(addButton, cancelButton);
-        footer.setAlignSelf(FlexComponent.Alignment.END);
+        HorizontalLayout footer = new HorizontalLayout(addButton, cancelButton);
         footer.setWidthFull();
+        footer.setAlignSelf(FlexComponent.Alignment.END);
 
-        VerticalLayout windowLayout = new VerticalLayout();
-        windowLayout.add(header, contentLayout, footer);
+        VerticalLayout windowLayout = new VerticalLayout(header, contentLayout, footer);
+        windowLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
         windowLayout.setWidthFull();
         add(windowLayout);
     }

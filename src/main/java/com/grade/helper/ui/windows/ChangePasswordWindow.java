@@ -18,6 +18,5 @@ public class ChangePasswordWindow extends CustomWindow {
 
         VerticalLayout contentLayout = new VerticalLayout(usernameLabel, passwordTextField, confirmationPasswordTextField);
         setContent(contentLayout);
-
     }
 }

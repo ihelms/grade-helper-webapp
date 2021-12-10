@@ -2,7 +2,6 @@ package com.grade.helper.ui.windows;
 
 import com.grade.helper.businesslogic.entities.enums.YEAR;
 import com.grade.helper.businesslogic.entities.joined.UserSchoolYear;
-import com.grade.helper.businesslogic.entities.simple.SchoolYear;
 import com.grade.helper.businesslogic.logic.*;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.listbox.ListBox;
@@ -28,6 +27,7 @@ public class SchoolYearWindow extends CustomWindow {
                             SubjectService subjectService,
                             UserSchoolYearService userSchoolYearService) {
         super("Schuljahr hinzufügen");
+
         this.subjectService = subjectService;
         this.userSchoolYearService = userSchoolYearService;
         this.userService = userService;
@@ -51,14 +51,12 @@ public class SchoolYearWindow extends CustomWindow {
                     schoolYearService.getSchoolYearByValue(comboBox.getValue()
                     ))
             );
-
             setListBoxItems();
             this.close();
         });
 
         VerticalLayout contentLayout = new VerticalLayout(listBox, comboBox);
         contentLayout.setWidthFull();
-
         setContent(contentLayout);
     }
 

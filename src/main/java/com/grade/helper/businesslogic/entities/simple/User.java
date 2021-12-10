@@ -7,6 +7,7 @@ import javax.persistence.*;
  */
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
+@Table(name = "user")
 @Entity
 public class User {
 

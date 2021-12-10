@@ -60,11 +60,6 @@ public class RegistrationView extends VerticalLayout {
         registerButton.addClickListener(buttonClickEvent -> {
             binder.writeBeanIfValid(user);
             userService.saveUser(user);
-            if (userService.isNewUserSaved(user)) {
-                UI.getCurrent().navigate(LoginView.class);
-            } else {
-                notification.open();
-            }
         });
 
         VerticalLayout content = new VerticalLayout(title, fieldLayout, registerButton);

@@ -2,7 +2,6 @@ package com.grade.helper.ui;
 
 import com.grade.helper.businesslogic.entities.enums.SUBJECT;
 import com.grade.helper.businesslogic.entities.joined.UserSchoolYear;
-import com.grade.helper.businesslogic.entities.simple.SchoolYear;
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.logic.*;
 import com.grade.helper.ui.component.OverviewView;
@@ -31,9 +30,12 @@ public abstract class HeaderView extends AppLayout {
 
     SubjectService subjectService;
     UserGradeService userGradeService;
+    UserSchoolYearService userSchoolYearService;
+
+    List<String> schoolYearStringList;
+    List<UserSchoolYear> schoolYearList;
 
     ComboBox<String> comboBox;
-    SchoolYear selectedSchoolYear;
     String currentUserName;
     User currentUser;
 
@@ -45,14 +47,13 @@ public abstract class HeaderView extends AppLayout {
         this.subjectService = subjectService;
         this.userGradeService = userGradeService;
 
-        currentUserName = userService.getAuthenticatedUser().getUsername();
-        currentUser = userService.getAuthenticatedUserDAO();
+        System.out.println("TEST");
+        userService.getAllUsers().forEach(user -> System.out.println(user.toString()));
+        userGradeService.getAll().forEach(user -> System.out.println(user.toString()));
 
-        List<String> schoolYearStringList = new LinkedList<>();
-        List<UserSchoolYear> schoolYearList = userSchoolYearService.getAllSchoolYearsByUser(currentUser);
-        schoolYearList.forEach(schoolYear -> {
-            schoolYearStringList.add(schoolYear.getSchoolYearId().getValue());
-        });
+        currentUserName = userService.getAuthenticatedUserDAO().getUsername();
+        currentUser = userService.getAuthenticatedUserDAO();
+        setLists();
 
         Anchor logo = new Anchor("/home", TITLE);
 
@@ -72,7 +73,7 @@ public abstract class HeaderView extends AppLayout {
                 VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue()));
         if (VaadinSession.getCurrent().getAttribute("school_year") != null) {
             comboBox.setValue(VaadinSession.getCurrent().getAttribute("school_year").toString());
-            schoolYearButton.setIcon(VaadinIcon.EDIT.create());
+            setLists();
         }
 
         HorizontalLayout leftSideHorizontalLayout = new HorizontalLayout(new DrawerToggle(), logo);
@@ -131,5 +132,16 @@ public abstract class HeaderView extends AppLayout {
                 link_11, link_12, link_13, link_14, link_15);
 
         return drawerLayout;
+    }
+
+    public void setLists() {
+        schoolYearStringList = new LinkedList<>();
+        schoolYearList = userSchoolYearService.getAllSchoolYearsByUser();
+        schoolYearList.forEach(schoolYear -> schoolYearStringList.add(schoolYear.getSchoolYearId().getValue()));
+    }
+
+    public UserSchoolYear getUserSchoolYear() {
+
+        return new UserSchoolYear();
     }
 }

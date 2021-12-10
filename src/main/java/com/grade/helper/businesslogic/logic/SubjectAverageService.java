@@ -3,8 +3,7 @@ package com.grade.helper.businesslogic.logic;
 import com.grade.helper.businesslogic.resource.SubjectAverage;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * created by ihelms on 02.12.2021
@@ -13,7 +12,9 @@ import java.util.Set;
 @Service
 public class SubjectAverageService {
 
+
     public Set<SubjectAverage> getSubjectAverageForSchoolYear() {
+        Map<String, Double> schoolYearMap = new HashMap<>();
         return new HashSet<>();
     }
 

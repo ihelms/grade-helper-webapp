@@ -9,10 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-/**
- * created by ihelms on 02.12.2021
- */
-
 @Component
 public class SchoolYearWindow extends CustomWindow {
 
@@ -39,7 +35,7 @@ public class SchoolYearWindow extends CustomWindow {
         }
 
         addClickListenerToAddButton(buttonClickEvent -> {
-            userSchoolYearService.getAllSchoolYearsByUser(userService.getAuthenticatedUserDAO());
+            //TODO
             this.close();
         });
 

@@ -1,5 +1,6 @@
 package com.grade.helper.ui.component.subjects;
 
+import com.grade.helper.businesslogic.entities.enums.SUBJECT;
 import com.grade.helper.businesslogic.logic.*;
 import com.grade.helper.ui.component.SubjectView;
 import com.vaadin.flow.router.Route;
@@ -19,6 +20,7 @@ public class PhysikView extends SubjectView {
 
     @Autowired
     public PhysikView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
-        super(schoolYearService, subjectService, userGradeService, gradeService, userService, userSchoolYearService);
+        super(schoolYearService, subjectService, userGradeService,
+                gradeService, userService, userSchoolYearService, SUBJECT.PHYSIK);
     }
 }

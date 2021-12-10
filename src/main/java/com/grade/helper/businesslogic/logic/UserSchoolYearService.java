@@ -20,7 +20,12 @@ public class UserSchoolYearService {
         this.userSchoolRepository = userSchoolRepository;
     }
 
-    public List<UserSchoolYear> getAllSchoolYearsByUser(User user) {
-        return userSchoolRepository.findAllByUserId(user);
+    public List<UserSchoolYear> getAllSchoolYearsByUser() {
+        userSchoolRepository.findAll().forEach(userSchoolYear -> {
+            System.out.println(userSchoolYear.toString());
+        });
+
+        return userSchoolRepository.findAllByUserIdId(1L);
+
     }
 }

@@ -8,6 +8,7 @@ import java.sql.Timestamp;
  */
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
+@Table(name = "grade")
 @Entity
 public class Grade {
 

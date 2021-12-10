@@ -10,6 +10,7 @@ import javax.persistence.*;
  */
 
 @SuppressWarnings("JpaDataSourceORMInspection")
+@Table(name = "userSchoolYear")
 @Entity
 public class UserSchoolYear {
 

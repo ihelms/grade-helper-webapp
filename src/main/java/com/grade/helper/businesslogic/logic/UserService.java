@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * created by ihelms on 02.12.2021
  */
@@ -38,7 +40,7 @@ public class UserService {
 
     public User getAuthenticatedUserDAO() {
         UserDetails userDetails = getAuthenticatedUser();
-        return userRepository.findUserDAOByUsername(userDetails.getUsername());
+        return userRepository.findUserDAOById(1L);
     }
 
     public void logout() {
@@ -51,10 +53,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean isNewUserSaved(User user) {
-        userRepository.findAll().forEach(userDAO1 -> System.out.println(userDAO1.toString()));
-        User exists = userRepository.findUserDAOByUsername(user.getUsername());
-        return exists != null;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
 }

@@ -3,6 +3,7 @@ package com.grade.helper.businesslogic.entities.simple;
 import javax.persistence.*;
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
+@Table(name = "schoolYear")
 @Entity
 public class SchoolYear {
 

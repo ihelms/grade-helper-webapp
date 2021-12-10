@@ -1,7 +1,7 @@
 package com.grade.helper.ui.login;
 
 import com.grade.helper.businesslogic.entities.simple.User;
-import com.grade.helper.businesslogic.service.UserService;
+import com.grade.helper.businesslogic.logic.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;

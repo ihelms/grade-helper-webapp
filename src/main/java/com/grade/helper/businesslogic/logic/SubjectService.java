@@ -1,4 +1,4 @@
-package com.grade.helper.businesslogic.service;
+package com.grade.helper.businesslogic.logic;
 
 import com.grade.helper.businesslogic.entities.simple.Subject;
 import com.grade.helper.businesslogic.repositories.SubjectRepository;
@@ -47,14 +47,25 @@ public class SubjectService {
     //generating test data
     @PostConstruct
     public void populateTestData() {
+        Subject bwl = new Subject(1L, "VWL");
+        Subject vwl = new Subject(2L, "BWL");
+        Subject iv = new Subject(3L, "IV");
+        Subject mathe = new Subject(4L, "Mathe");
+        Subject bio = new Subject(5L, "BIO");
+        Subject chemie = new Subject(6L, "Chemie");
+        Subject physik = new Subject(7L, "Physik");
+        Subject englisch = new Subject(8L, "Englisch");
+        Subject ethik = new Subject(9L, "Ethik");
+        Subject reli = new Subject(10L, "Reli");
+        Subject deutsch = new Subject(11L, "Deutsch");
+        Subject spanisch = new Subject(12L, "Spanisch");
+        Subject franzoesisch = new Subject(13L, "Französisch");
+        Subject kunst = new Subject(14L, "Kunst");
+        Subject sport = new Subject(15L, "Sport");
+
         if (subjectRepository.count() == 0) {
-            subjectRepository.saveAll(
-                    List.of(
-                            new Subject(1L, "Chemie"),
-                            new Subject(2L, "Biologie"),
-                            new Subject(3L, "Sport"),
-                            new Subject(4L, "BWL")
-                    )
+            subjectRepository.saveAll(List.of(bwl, vwl, iv, mathe, bio, chemie, physik, englisch,
+                    ethik, reli, deutsch, spanisch, franzoesisch, kunst, sport)
             );
         }
     }

@@ -1,6 +1,6 @@
 package com.grade.helper.ui.windows;
 
-import com.grade.helper.businesslogic.service.UserService;
+import com.grade.helper.businesslogic.logic.UserService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;

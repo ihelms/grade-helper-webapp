@@ -1,4 +1,4 @@
-package com.grade.helper.businesslogic.service;
+package com.grade.helper.businesslogic.logic;
 
 import com.grade.helper.businesslogic.resource.SubjectAverage;
 import org.springframework.stereotype.Service;

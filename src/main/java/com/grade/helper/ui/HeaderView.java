@@ -1,12 +1,14 @@
 package com.grade.helper.ui;
 
 import com.grade.helper.businesslogic.entities.enums.SUBJECT;
+import com.grade.helper.businesslogic.entities.joined.UserSchoolYear;
 import com.grade.helper.businesslogic.entities.simple.SchoolYear;
-import com.grade.helper.businesslogic.entities.simple.Subject;
-import com.grade.helper.businesslogic.service.*;
+import com.grade.helper.businesslogic.entities.simple.User;
+import com.grade.helper.businesslogic.logic.*;
 import com.grade.helper.ui.component.OverviewView;
-import com.grade.helper.ui.component.SubjectView;
-import com.grade.helper.ui.windows.*;
+import com.grade.helper.ui.component.subjects.*;
+import com.grade.helper.ui.windows.ConfigurationWindow;
+import com.grade.helper.ui.windows.SchoolYearWindow;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -15,7 +17,6 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 
@@ -24,9 +25,6 @@ import java.util.List;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 
-/**
- * created by ihelms on 18.11.2021
- */
 public abstract class HeaderView extends AppLayout {
 
     public static String TITLE = "Grade Helper";
@@ -37,30 +35,39 @@ public abstract class HeaderView extends AppLayout {
     ComboBox<String> comboBox;
     SchoolYear selectedSchoolYear;
     String currentUserName;
+    User currentUser;
 
-    public HeaderView(SchoolYearService schoolYearService,
+    public HeaderView(UserGradeService userGradeService,
+                      SchoolYearService schoolYearService,
                       SubjectService subjectService,
-                      UserGradeService userGradeService,
-                      UserService userService) {
+                      UserService userService,
+                      UserSchoolYearService userSchoolYearService) {
         this.subjectService = subjectService;
         this.userGradeService = userGradeService;
 
         currentUserName = userService.getAuthenticatedUser().getUsername();
+        currentUser = userService.getAuthenticatedUserDAO();
+
+        List<String> schoolYearStringList = new LinkedList<>();
+        List<UserSchoolYear> schoolYearList = userSchoolYearService.getAllSchoolYearsByUser(currentUser);
+        schoolYearList.forEach(schoolYear -> {
+            schoolYearStringList.add(schoolYear.getSchoolYearId().getValue());
+        });
 
         Anchor logo = new Anchor("/home", TITLE);
 
         Button schoolYearButton = new Button();
         schoolYearButton.setIcon(VaadinIcon.PLUS.create());
         schoolYearButton.addClickListener(buttonClickEvent -> {
-            SchoolYearWindow schoolYearWindow = new SchoolYearWindow(schoolYearService,
-                    userGradeService, userService, subjectService);
+            SchoolYearWindow schoolYearWindow = new SchoolYearWindow(schoolYearService, userGradeService, userService,
+                    subjectService, userSchoolYearService);
             schoolYearWindow.open();
         });
 
         comboBox = new ComboBox<>("");
         comboBox.setWidth("25%");
         comboBox.setClearButtonVisible(true);
-        comboBox.setItems(userGradeService.getAllSchoolYearStringsByUser(currentUserName));
+        comboBox.setItems(schoolYearStringList);
         comboBox.addValueChangeListener(valueChanged ->
                 VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue()));
         if (VaadinSession.getCurrent().getAttribute("school_year") != null) {
@@ -103,17 +110,25 @@ public abstract class HeaderView extends AppLayout {
         drawerLayout.setHeight("85%");
 
         RouterLink overviewLink = new RouterLink("Übersicht", OverviewView.class);
-        overviewLink.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink link_1 = new RouterLink(SUBJECT.MATHE.getValue(), MatheView.class);
+        RouterLink link_2 = new RouterLink(SUBJECT.DEUTSCH.getValue(), DeutschView.class);
+        RouterLink link_3 = new RouterLink(SUBJECT.ENGLISCH.getValue(), EnglischView.class);
+        RouterLink link_4 = new RouterLink(SUBJECT.SPANISCH.getValue(), SpanischView.class);
+        RouterLink link_5 = new RouterLink(SUBJECT.FRANZOESISCH.getValue(), FranzoesischView.class);
+        RouterLink link_6 = new RouterLink(SUBJECT.CHEMIE.getValue(), ChemieView.class);
+        RouterLink link_7 = new RouterLink(SUBJECT.PHYSIK.getValue(), PhysikView.class);
+        RouterLink link_8 = new RouterLink(SUBJECT.BIO.getValue(), BiologieView.class);
+        RouterLink link_9 = new RouterLink(SUBJECT.RELI.getValue(), ReliView.class);
+        RouterLink link_10 = new RouterLink(SUBJECT.ETHIK.getValue(), EthikView.class);
+        RouterLink link_11 = new RouterLink(SUBJECT.IV.getValue(), IV_View.class);
+        RouterLink link_12 = new RouterLink(SUBJECT.KUNST.getValue(), KunstView.class);
+        RouterLink link_13 = new RouterLink(SUBJECT.SPORT.getValue(), SportView.class);
+        RouterLink link_14 = new RouterLink(SUBJECT.BWL.getValue(), BWL_View.class);
+        RouterLink link_15 = new RouterLink(SUBJECT.VWL.getValue(), VWL_View.class);
 
-        drawerLayout.addAndExpand(overviewLink);
-
-        for (SUBJECT item : SUBJECT.values()) {
-            VaadinSession.getCurrent().setAttribute("subject", item.getValue());
-
-            RouterLink subjectRouterLink = new RouterLink(item.getValue(), SubjectView.class);
-            subjectRouterLink.setHighlightCondition(HighlightConditions.sameLocation());
-            drawerLayout.addAndExpand(subjectRouterLink);
-        }
+        drawerLayout.addAndExpand(overviewLink, link_1, link_2, link_3, link_4, link_5,
+                link_6, link_7, link_8, link_9, link_10,
+                link_11, link_12, link_13, link_14, link_15);
 
         return drawerLayout;
     }

@@ -6,9 +6,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.*;
 
-/**
- * created by ihelms on 30.11.2021
- */
 
 public abstract class CustomWindow extends Dialog {
 

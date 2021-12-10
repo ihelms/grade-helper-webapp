@@ -1,9 +1,11 @@
 package com.grade.helper.ui.component;
 
-import com.grade.helper.businesslogic.entities.simple.Grade;
-import com.grade.helper.businesslogic.entities.simple.GradeType;
-import com.grade.helper.businesslogic.service.*;
+import com.grade.helper.businesslogic.entities.enums.SUBJECT;
+import com.grade.helper.businesslogic.entities.joined.UserSchoolYear;
+import com.grade.helper.businesslogic.entities.simple.*;
+import com.grade.helper.businesslogic.logic.*;
 import com.grade.helper.ui.HeaderView;
+import com.grade.helper.ui.validator.PlainStringToLongIdConverter;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
@@ -12,25 +14,17 @@ import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
-import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-/**
- * created by ihelms on 25.11.2021
- */
 
 @Route(SubjectView.SUBJECT_VIEW)
-@SpringComponent
-@UIScope
-public class SubjectView extends HeaderView {
+public abstract class SubjectView extends HeaderView {
 
     final static String SUBJECT_VIEW = "subject";
 
@@ -50,26 +44,31 @@ public class SubjectView extends HeaderView {
 
     private final GradeService gradeService;
 
-    @Autowired
     public SubjectView(SchoolYearService schoolYearService,
                        SubjectService subjectService,
                        UserGradeService userGradeService,
                        GradeService gradeService,
-                       UserService userService) {
-        super(schoolYearService, subjectService, userGradeService, userService);
+                       UserService userService,
+                       UserSchoolYearService userSchoolYearService,
+                       SUBJECT subject) {
+        super(userGradeService, schoolYearService, subjectService, userService, userSchoolYearService);
 
         this.gradeService = gradeService;
         this.binder = new Binder<>();
 
-        String subjectName = String.valueOf(VaadinSession.getCurrent().getAttribute("subject"));
+        String schoolYear = String.valueOf(VaadinSession.getCurrent().getAttribute("school_year"));
+        SchoolYear selectedSchoolYear = schoolYearService.getSchoolYearByValue(schoolYear);
 
         //TODO
-        this.gradeResourceSet = new HashSet<>();
+        this.gradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(subject, new UserSchoolYear());
 
         setContent(setView());
     }
 
     private VerticalLayout setView() {
+        //TODO: HORIZONTALLAYOUT FOR IMPROVEMENT
+        HorizontalLayout horizontalLayout = new HorizontalLayout();
+
         grid = new Grid<>();
         dataProvider = DataProvider.ofCollection(gradeResourceSet);
 
@@ -146,7 +145,7 @@ public class SubjectView extends HeaderView {
 
         //Binder
         binder.forField(idTextField)
-                .withConverter(new StringToLongConverter(idTextField.getValue()))
+                .withConverter(new PlainStringToLongIdConverter())
                 .bind(Grade::getId, Grade::setId);
         binder.forField(gradeTypeComboBox)
                 .bind(Grade::getGrade_type, Grade::setGrade_type);
@@ -236,6 +235,8 @@ public class SubjectView extends HeaderView {
         binder.readBean(null);
 
         addButton.setText("Hinzufügen");
+        idTextField.setValue("auto-generated");
+        dateTextField.setValue("auto-generated");
 
         editContainer.setVisible(true);
         newGradeButton.setVisible(false);

@@ -1,4 +1,4 @@
-package com.grade.helper.businesslogic.service;
+package com.grade.helper.businesslogic.logic;
 
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.repositories.UserRepository;
@@ -10,10 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * created by ihelms on 02.12.2021
@@ -60,29 +56,5 @@ public class UserService {
         User exists = userRepository.findUserDAOByUsername(user.getUsername());
         return exists != null;
     }
-
-    //generating test data
-    @PostConstruct
-    public void populateTestData() {
-        if (userRepository.count() == 0) {
-            userRepository.saveAll(
-                    Stream.of(
-                                    "1 FirstName1 LastName1 user1 password1",
-                                    "2 FirstName2 LastName2 user2 password2",
-                                    "3 FirstName3 LastName3 user3 password3",
-                                    "4 Admin Admin admin admin")
-                            .map(name -> {
-                                String[] splitUser = name.split(" ");
-                                User user = new User();
-                                user.setId(Long.valueOf(splitUser[0]));
-                                user.setFirstName(splitUser[1]);
-                                user.setLastName(splitUser[2]);
-                                user.setPassword(splitUser[3]);
-                                return user;
-                            }).collect(Collectors.toList())
-            );
-        }
-    }
-
 
 }

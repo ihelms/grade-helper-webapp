@@ -13,6 +13,4 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
     Subject findByValue(@Param("value") String value);
 
-  //  @Query(value = "select * from sc", nativeQuery = true)
-   // List<Subject> findAllBySchoolYearDAO(String schoolYearDAO);
 }

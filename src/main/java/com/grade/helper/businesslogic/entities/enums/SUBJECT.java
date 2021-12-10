@@ -3,8 +3,8 @@ package com.grade.helper.businesslogic.entities.enums;
 public enum SUBJECT {
     BWL(1L, "Betriebswirtschaftslehre"),
     VWL(2L, "Volkswirtschaftslehre"),
-    IV(3L, "Mathematik"),
-    MATHE(4L, "Informationsverarbeitung"),
+    IV(3L, "Informationsverarbeitung"),
+    MATHE(4L, "Mathematik"),
     BIO(5L, "Biologie"),
     CHEMIE(6L, "Chemie"),
     PHYSIK(7L, "Physik"),

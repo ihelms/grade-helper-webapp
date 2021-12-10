@@ -18,12 +18,8 @@ public class UserGrade {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "userId", referencedColumnName = "id")
-    private User userId;
-
-    @OneToOne
-    @JoinColumn(name = "schoolYearId", referencedColumnName = "id")
-    private SchoolYear schoolYearId;
+    @JoinColumn(name = "userSchoolYearId", referencedColumnName = "id")
+    private UserSchoolYear userSchoolYearId;
 
     @OneToOne
     @JoinColumn(name = "gradeId", referencedColumnName = "id")
@@ -37,20 +33,12 @@ public class UserGrade {
         this.id = id;
     }
 
-    public User getUserId() {
-        return userId;
+    public UserSchoolYear getUserSchoolYearId() {
+        return userSchoolYearId;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
-    }
-
-    public SchoolYear getSchoolYearId() {
-        return schoolYearId;
-    }
-
-    public void setSchoolYearId(SchoolYear schoolYearId) {
-        this.schoolYearId = schoolYearId;
+    public void setUserSchoolYearId(UserSchoolYear userSchoolYearId) {
+        this.userSchoolYearId = userSchoolYearId;
     }
 
     public Grade getGradeId() {
@@ -64,18 +52,16 @@ public class UserGrade {
     public UserGrade() {
     }
 
-    public UserGrade(User userId, SchoolYear schoolYearId, Grade gradeId) {
-        this.userId = userId;
-        this.schoolYearId = schoolYearId;
+    public UserGrade(UserSchoolYear userSchoolYearId, Grade gradeId) {
+        this.userSchoolYearId = userSchoolYearId;
         this.gradeId = gradeId;
     }
 
     @Override
     public String toString() {
-        return "UserGradeDAO{" +
+        return "UserGrade{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", schoolYearId=" + schoolYearId +
+                ", userSchoolYearId=" + userSchoolYearId +
                 ", gradeId=" + gradeId +
                 '}';
     }

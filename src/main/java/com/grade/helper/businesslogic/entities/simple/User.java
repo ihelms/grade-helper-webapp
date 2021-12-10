@@ -7,25 +7,25 @@ import javax.persistence.*;
  */
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
-@Table(name = "user")
+@Table(name = "USER")
 @Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "USERNAME", unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "firstName")
+    @Column(name = "FIRSTNAME")
     private String firstName;
 
-    @Column(name = "lastName")
+    @Column(name = "LASTNAME")
     private String lastName;
 
     public Long getId() {

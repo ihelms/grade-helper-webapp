@@ -9,8 +9,8 @@ import javax.persistence.*;
  * created by ihelms on 10.12.2021
  */
 
-@SuppressWarnings("JpaDataSourceORMInspection")
-@Table(name = "userSchoolYear")
+@SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
+@Table(name = "USERSCHOOLYEAR")
 @Entity
 public class UserSchoolYear {
 
@@ -20,11 +20,11 @@ public class UserSchoolYear {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "userId", referencedColumnName = "id")
+    @JoinColumn(name = "USERID", referencedColumnName = "ID")
     private User userId;
 
     @OneToOne
-    @JoinColumn(name = "schoolYearId", referencedColumnName = "id")
+    @JoinColumn(name = "YEARID", referencedColumnName = "ID")
     private SchoolYear schoolYearId;
 
     public Long getId() {

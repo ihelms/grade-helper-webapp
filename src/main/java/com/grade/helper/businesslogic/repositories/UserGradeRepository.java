@@ -11,8 +11,5 @@ import java.util.List;
 @Repository
 public interface UserGradeRepository extends JpaRepository<UserGrade, Long> {
 
-    @Override
-    <S extends UserGrade> S save(S s);
-
     List<UserGrade> findAllByUserSchoolYearId(UserSchoolYear userSchoolYear);
 }

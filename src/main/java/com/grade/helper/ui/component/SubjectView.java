@@ -40,7 +40,6 @@ public abstract class SubjectView extends HeaderView {
     private Button newGradeButton;
     private Button addButton;
     private TextField idTextField;
-    private TextField dateTextField;
 
     private final GradeService gradeService;
 
@@ -58,16 +57,18 @@ public abstract class SubjectView extends HeaderView {
 
         String schoolYear = String.valueOf(VaadinSession.getCurrent().getAttribute("school_year"));
         SchoolYear selectedSchoolYear = schoolYearService.getSchoolYearByValue(schoolYear);
-
-        //TODO
-        this.gradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(subject, new UserSchoolYear());
+        User currentUser = userService.getAuthenticatedUserDAO();
+        UserSchoolYear currentUserSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(currentUser, selectedSchoolYear);
+        Subject selectedSubject = subjectService.getSubjectOfSubjectEnum(subject);
+        this.gradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, currentUserSchoolYear);
 
         setContent(setView());
     }
 
     private VerticalLayout setView() {
         //TODO: HORIZONTALLAYOUT FOR IMPROVEMENT
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        HorizontalLayout improvementLayout = new HorizontalLayout();
+
 
         grid = new Grid<>();
         dataProvider = DataProvider.ofCollection(gradeResourceSet);
@@ -77,35 +78,28 @@ public abstract class SubjectView extends HeaderView {
         editContainer.setSpacing(false);
         editContainer.setMargin(false);
         editContainer.setVisible(false);
-        editContainer.setClassName("grid-edit-container");
-        //TODO: Add style to editContainer
 
         createEditContainer();
 
-        Grid.Column<Grade> gradeTypeColumn = grid.addColumn(Grade::getGrade_type)
+        grid.addColumn(Grade::getGrade_type)
                 .setHeader("Notenart")
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("gradeType");
-        Grid.Column<Grade> gradeColumn = grid.addColumn(Grade::getGrade)
+        grid.addColumn(Grade::getGrade)
                 .setHeader("Note")
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("grade");
-        Grid.Column<Grade> gradePrioritisationColumn = grid.addColumn(Grade::getPrioritisation)
+        grid.addColumn(Grade::getPrioritisation)
                 .setHeader("Gewichtung")
                 .setSortable(true)
                 .setAutoWidth(true)
                 .setKey("gradePriorisation");
-        Grid.Column<Grade> dateColumn = grid.addColumn(Grade::getDate)
-                .setHeader("Datum")
-                .setSortable(true)
-                .setAutoWidth(true)
-                .setKey("date");
-        grid.addComponentColumn(item -> new Button(VaadinIcon.TRASH.create(),
+        grid.addComponentColumn(grade -> new Button(VaadinIcon.TRASH.create(),
                         click -> {
-                            //TODO
-                            gradeResourceSet.remove(item);
+                            gradeService.removeGrade(grade);
+                            gradeResourceSet.remove(grade);
                             grid.getDataProvider().refreshAll();
                         }))
                 .setWidth("10%");
@@ -120,7 +114,7 @@ public abstract class SubjectView extends HeaderView {
         buttonLayout.setWidthFull();
         buttonLayout.setAlignItems(FlexComponent.Alignment.END);
 
-        return new VerticalLayout(grid, editContainer, buttonLayout);
+        return new VerticalLayout(improvementLayout, grid, editContainer, buttonLayout);
     }
 
     private void createEditContainer() {
@@ -139,10 +133,6 @@ public abstract class SubjectView extends HeaderView {
         TextField priorisationTextField = new TextField("Gewichtung");
         priorisationTextField.setWidth("500px");
 
-        dateTextField = new TextField("Datum");
-        dateTextField.setReadOnly(true);
-        dateTextField.setWidth("500px");
-
         //Binder
         binder.forField(idTextField)
                 .withConverter(new PlainStringToLongIdConverter())
@@ -154,22 +144,16 @@ public abstract class SubjectView extends HeaderView {
         binder.forField(priorisationTextField)
                 .withConverter(new StringToDoubleConverter(priorisationTextField.getValue()))
                 .bind(Grade::getPrioritisation, Grade::setPrioritisation);
-        //binder.forField(dateTextField)
-        //      .withConverter()
-        //    .bind(GradeDAO::getDate, GradeDAO::setDate);
 
         //ContentLayout
         HorizontalLayout lineOneLayout = new HorizontalLayout(idTextField, gradeTypeComboBox);
         lineOneLayout.setWidthFull();
 
-        HorizontalLayout twoOneLayout = new HorizontalLayout(gradeComboBox, priorisationTextField);
-        twoOneLayout.setWidthFull();
-
-        HorizontalLayout threeOneLayout = new HorizontalLayout(dateTextField);
-        threeOneLayout.setWidthFull();
+        HorizontalLayout lineTwoLayout = new HorizontalLayout(gradeComboBox, priorisationTextField);
+        lineTwoLayout.setWidthFull();
 
         VerticalLayout contentLayout = new VerticalLayout();
-        contentLayout.add(lineOneLayout, twoOneLayout, threeOneLayout);
+        contentLayout.add(lineOneLayout, lineTwoLayout);
 
         //Button
         addButton = new Button("Hinzufügen", buttonClickEvent -> addGrade());
@@ -205,10 +189,12 @@ public abstract class SubjectView extends HeaderView {
             if (selectedGrade == null) {
                 Grade grade = new Grade();
                 binder.writeBeanIfValid(grade);
+                gradeService.saveGrade(grade);
                 gradeResourceSet.add(grade);
             } else {
                 gradeResourceSet.remove(selectedGrade);
                 binder.writeBeanIfValid(selectedGrade);
+                gradeService.saveGrade(selectedGrade);
                 gradeResourceSet.add(selectedGrade);
             }
             editContainer.setVisible(false);
@@ -236,7 +222,6 @@ public abstract class SubjectView extends HeaderView {
 
         addButton.setText("Hinzufügen");
         idTextField.setValue("auto-generated");
-        dateTextField.setValue("auto-generated");
 
         editContainer.setVisible(true);
         newGradeButton.setVisible(false);

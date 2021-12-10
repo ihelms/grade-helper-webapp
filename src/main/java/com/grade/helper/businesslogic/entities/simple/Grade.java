@@ -1,37 +1,33 @@
 package com.grade.helper.businesslogic.entities.simple;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 /**
  * created by ihelms on 25.11.2021
  */
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
-@Table(name = "grade")
+@Table(name = "GRADE")
 @Entity
 public class Grade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "grade_type", referencedColumnName = "id")
+    @JoinColumn(name = "GRADTYPEID", referencedColumnName = "ID")
     private GradeType gradeType;
 
-    @Column(name = "grade")
+    @Column(name = "GRADE")
     private Integer grade;
 
-    @Column(name = "prioritisation")
+    @Column(name = "PRIORITISATION")
     private Double prioritisation;
 
-    @Column(name = "date")
-    private Timestamp date;
-
     @OneToOne
-    @JoinColumn(name = "subject", referencedColumnName = "id")
+    @JoinColumn(name = "SUBJECTID", referencedColumnName = "ID")
     private Subject subject;
 
     public Long getId() {
@@ -66,14 +62,6 @@ public class Grade {
         this.prioritisation = prioritisation;
     }
 
-    public Timestamp getDate() {
-        return date;
-    }
-
-    public void setDate(Timestamp date) {
-        this.date = date;
-    }
-
     public Subject getSubject() {
         return subject;
     }
@@ -89,7 +77,6 @@ public class Grade {
                 ", grade_type=" + gradeType +
                 ", grade=" + grade +
                 ", prioritisation=" + prioritisation +
-                ", date=" + date +
                 ", subject=" + subject +
                 '}';
     }
@@ -97,11 +84,10 @@ public class Grade {
     public Grade() {
     }
 
-    public Grade(GradeType gradeType, Integer grade, Double prioritisation, Timestamp date, Subject subject) {
+    public Grade(GradeType gradeType, Integer grade, Double prioritisation, Subject subject) {
         this.gradeType = gradeType;
         this.grade = grade;
         this.prioritisation = prioritisation;
-        this.date = date;
         this.subject = subject;
     }
 }

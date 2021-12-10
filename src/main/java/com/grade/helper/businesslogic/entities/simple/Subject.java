@@ -3,15 +3,16 @@ package com.grade.helper.businesslogic.entities.simple;
 import javax.persistence.*;
 
 @SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
-@Table(name = "subject")
+@Table(name = "SUBJECT")
 @Entity
 public class Subject {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column
+    @Column(name = "SUBJECT")
     private String value;
 
     public Long getId() {

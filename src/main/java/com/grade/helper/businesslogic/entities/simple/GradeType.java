@@ -2,17 +2,18 @@ package com.grade.helper.businesslogic.entities.simple;
 
 import javax.persistence.*;
 
-@SuppressWarnings("JpaDataSourceORMInspection")
-@Table(name = "gradeType")
+@SuppressWarnings({"JpaDataSourceORMInspection", "unused"})
+@Table(name = "GRADETYPE")
 @Entity
 public class GradeType {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column
-    private String type;
+    @Column(name = "GRADETYPE")
+    private String gradeType;
 
     public Long getId() {
         return id;
@@ -22,27 +23,27 @@ public class GradeType {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getGradeType() {
+        return gradeType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setGradeType(String type) {
+        this.gradeType = type;
     }
 
     @Override
     public String toString() {
         return "GRADE_TYPE{" +
                 "id=" + id +
-                ", type='" + type + '\'' +
+                ", type='" + gradeType + '\'' +
                 '}';
     }
 
     public GradeType() {
     }
 
-    public GradeType(Long id, String type) {
+    public GradeType(Long id, String gradeType) {
         this.id = id;
-        this.type = type;
+        this.gradeType = gradeType;
     }
 }

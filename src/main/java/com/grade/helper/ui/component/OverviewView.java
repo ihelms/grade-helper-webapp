@@ -13,11 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Set;
 
-/**
- * created by ihelms on 25.11.2021
- */
 
-@SuppressWarnings("unused")
 @Route(OverviewView.OVERVIEW)
 @SpringComponent
 @UIScope
@@ -30,19 +26,21 @@ public class OverviewView extends HeaderView {
                         SubjectService subjectService,
                         UserGradeService userGradeService,
                         UserService userService,
-                        UserSchoolYearService userSchoolYearService) {
+                        UserSchoolYearService userSchoolYearService,
+                        SubjectAverageService subjectAverageService) {
         super(userGradeService, schoolYearService, subjectService, userService, userSchoolYearService);
-        SubjectAverageService subjectAverageService = new SubjectAverageService();
+
         Set<SubjectAverage> subjectAverageSet = subjectAverageService.getSubjectAverageForSchoolYear();
 
         Grid<SubjectAverage> grid = new Grid<>();
-        Grid.Column<SubjectAverage> subjectColumn = grid.addColumn(SubjectAverage::getSubject)
+        grid.addColumn(SubjectAverage::getSubject)
                 .setAutoWidth(true)
                 .setHeader("Fach");
-        Grid.Column<SubjectAverage> averageColumn = grid.addColumn(SubjectAverage::getAverage)
+        grid.addColumn(SubjectAverage::getAverage)
                 .setAutoWidth(true)
                 .setHeader("Durchschnitt");
         grid.setDataProvider(DataProvider.ofCollection(subjectAverageSet));
+        grid.setHeightByRows(true);
 
         setContent(new VerticalLayout(grid));
     }

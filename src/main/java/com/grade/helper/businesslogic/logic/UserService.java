@@ -2,7 +2,11 @@ package com.grade.helper.businesslogic.logic;
 
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.repositories.UserRepository;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
@@ -11,11 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-/**
- * created by ihelms on 02.12.2021
- */
 
 @Service
 public class UserService {
@@ -39,7 +38,6 @@ public class UserService {
     }
 
     public User getAuthenticatedUserDAO() {
-        UserDetails userDetails = getAuthenticatedUser();
         return userRepository.findUserDAOById(1L);
     }
 
@@ -50,11 +48,16 @@ public class UserService {
     }
 
     public void saveUser(User user) {
-        userRepository.save(user);
-    }
+        try {
+            userRepository.save(user);
+        } catch (Exception exc) {
+            Notification notification = new Notification();
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+            Div text = new Div(new Text("Registrierung ist fehlgeschlagen"));
+            notification.add(text);
+            notification.setDuration(650);
+            notification.open();
+        }
     }
-
 }

@@ -8,6 +8,7 @@ import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.subjects.*;
 import com.grade.helper.ui.windows.ConfigurationWindow;
 import com.grade.helper.ui.windows.SchoolYearWindow;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -23,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+
 
 public abstract class HeaderView extends AppLayout {
 
@@ -46,10 +48,7 @@ public abstract class HeaderView extends AppLayout {
                       UserSchoolYearService userSchoolYearService) {
         this.subjectService = subjectService;
         this.userGradeService = userGradeService;
-
-        System.out.println("TEST");
-        userService.getAllUsers().forEach(user -> System.out.println(user.toString()));
-        userGradeService.getAll().forEach(user -> System.out.println(user.toString()));
+        this.userSchoolYearService = userSchoolYearService;
 
         currentUserName = userService.getAuthenticatedUserDAO().getUsername();
         currentUser = userService.getAuthenticatedUserDAO();
@@ -60,7 +59,7 @@ public abstract class HeaderView extends AppLayout {
         Button schoolYearButton = new Button();
         schoolYearButton.setIcon(VaadinIcon.PLUS.create());
         schoolYearButton.addClickListener(buttonClickEvent -> {
-            SchoolYearWindow schoolYearWindow = new SchoolYearWindow(schoolYearService, userGradeService, userService,
+            SchoolYearWindow schoolYearWindow = new SchoolYearWindow(schoolYearService, userService,
                     subjectService, userSchoolYearService);
             schoolYearWindow.open();
         });
@@ -69,12 +68,18 @@ public abstract class HeaderView extends AppLayout {
         comboBox.setWidth("25%");
         comboBox.setClearButtonVisible(true);
         comboBox.setItems(schoolYearStringList);
-        comboBox.addValueChangeListener(valueChanged ->
-                VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue()));
-        if (VaadinSession.getCurrent().getAttribute("school_year") != null) {
-            comboBox.setValue(VaadinSession.getCurrent().getAttribute("school_year").toString());
-            setLists();
-        }
+        comboBox.setValue(schoolYearStringList.get(schoolYearStringList.size() - 1));
+        VaadinSession.getCurrent().setAttribute("school_year", comboBox.getValue());
+
+        comboBox.addValueChangeListener(valueChanged -> {
+            VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue());
+            UI.getCurrent().getPage().reload();
+
+            if (VaadinSession.getCurrent().getAttribute("school_year") != null) {
+                comboBox.setValue(VaadinSession.getCurrent().getAttribute("school_year").toString());
+                setLists();
+            }
+        });
 
         HorizontalLayout leftSideHorizontalLayout = new HorizontalLayout(new DrawerToggle(), logo);
         leftSideHorizontalLayout.setWidthFull();
@@ -136,12 +141,7 @@ public abstract class HeaderView extends AppLayout {
 
     public void setLists() {
         schoolYearStringList = new LinkedList<>();
-        schoolYearList = userSchoolYearService.getAllSchoolYearsByUser();
+        schoolYearList = userSchoolYearService.getAllSchoolYearsByUser(currentUser);
         schoolYearList.forEach(schoolYear -> schoolYearStringList.add(schoolYear.getSchoolYearId().getValue()));
-    }
-
-    public UserSchoolYear getUserSchoolYear() {
-
-        return new UserSchoolYear();
     }
 }

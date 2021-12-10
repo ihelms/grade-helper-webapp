@@ -9,21 +9,21 @@ import javax.persistence.*;
  */
 
 @SuppressWarnings("JpaDataSourceORMInspection")
-@Table(name = "userGrade")
+@Table(name = "USERGRADE")
 @Entity
 public class UserGrade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "userSchoolYearId", referencedColumnName = "id")
+    @JoinColumn(name = "USERSCHOOLYEARID", referencedColumnName = "ID")
     private UserSchoolYear userSchoolYearId;
 
     @OneToOne
-    @JoinColumn(name = "gradeId", referencedColumnName = "id")
+    @JoinColumn(name = "GRADEID", referencedColumnName = "ID")
     private Grade gradeId;
 
     public Long getId() {

@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-/**
- * created by ihelms on 26.11.2021
- */
 
 @Service
 public class GradeService {
@@ -27,12 +24,15 @@ public class GradeService {
         this.subjectRepository = subjectRepository;
     }
 
-    public Set<Grade> getGradesBySubjectAndYear(Subject subject) {
-        return new HashSet<>();
-    }
-
     public List<GradeType> getAllGradeTypes() {
         return gradeTypeRepository.findAll();
     }
 
+    public void saveGrade(Grade grade) {
+        gradeRepository.save(grade);
+    }
+
+    public void removeGrade(Grade grade) {
+        gradeRepository.delete(grade);
+    }
 }

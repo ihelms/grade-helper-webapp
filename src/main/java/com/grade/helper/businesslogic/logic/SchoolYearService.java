@@ -6,9 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-/**
- * created by ihelms on 26.11.2021
- */
 
 @Service
 public class SchoolYearService {

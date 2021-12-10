@@ -39,11 +39,9 @@ public class UserGradeService {
         this.userSchoolRepository = userSchoolRepository;
     }
 
-
-
-    public Set<Grade> getAllGradesForSubjectAndSchoolYear(SUBJECT subject, UserSchoolYear userSchoolYear) {
+    public Set<Grade> getAllGradesForSubjectAndSchoolYear(Subject subject, UserSchoolYear userSchoolYear) {
         Set<Grade> gradeList = new HashSet<>();
-/*        List<UserGrade> userSchoolYearList = userGradeRepository.findAllByUserSchoolYearId(userSchoolYear);
+        List<UserGrade> userSchoolYearList = userGradeRepository.findAllByUserSchoolYearId(userSchoolYear);
         userSchoolYearList.forEach(userGrade -> {
             Grade grade = userGrade.getGradeId();
             if (Objects.equals(grade.getSubject().getValue(), subject.getValue())) {
@@ -51,12 +49,7 @@ public class UserGradeService {
             }
         });
 
- */
         return gradeList;
-    }
-
-    public List<UserGrade> getAll() {
-        return userGradeRepository.findAll();
     }
 
 }

@@ -1,21 +1,17 @@
 package com.grade.helper.businesslogic.resource;
 
-import com.grade.helper.businesslogic.entities.simple.Subject;
 
-/**
- * created by ihelms on 02.12.2021
- */
-
+@SuppressWarnings("unused")
 public class SubjectAverage {
 
-    private Subject subject;
+    private String subject;
     private Double average;
 
-    public Subject getSubject() {
+    public String getSubject() {
         return subject;
     }
 
-    public void setSubject(Subject subject) {
+    public void setSubject(String subject) {
         this.subject = subject;
     }
 
@@ -24,6 +20,14 @@ public class SubjectAverage {
     }
 
     public void setAverage(Double average) {
+        this.average = average;
+    }
+
+    public SubjectAverage() {
+    }
+
+    public SubjectAverage(String subject, Double average) {
+        this.subject = subject;
         this.average = average;
     }
 

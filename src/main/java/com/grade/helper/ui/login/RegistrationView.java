@@ -2,10 +2,8 @@ package com.grade.helper.ui.login;
 
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.logic.UserService;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -34,13 +32,21 @@ public class RegistrationView extends VerticalLayout {
         TextField lastName = createTextField("Nachname");
 
         PasswordField password = new PasswordField("Passwort");
+        password.setWidth("250px");
+
         PasswordField passwordConfirmation = new PasswordField("Passwort wiederholen");
+        passwordConfirmation.setWidth("250px");
         passwordConfirmation.addValueChangeListener(valueChangeEvent -> {
-            //TODO
+            passwordConfirmation.setInvalid(true);
+            passwordConfirmation.setErrorMessage("Stimmt mit Passwort nicht überein!");
         });
 
-        VerticalLayout fieldLayout = new VerticalLayout(username, firstName,
-                lastName, password, passwordConfirmation);
+        VerticalLayout fieldLayout = new VerticalLayout(username,
+                firstName,
+                lastName,
+                password,
+                passwordConfirmation);
+        fieldLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         //Binder
         binder.forField(username)
@@ -52,9 +58,6 @@ public class RegistrationView extends VerticalLayout {
         binder.forField(password)
                 .bind(User::getPassword, User::setPassword);
         binder.readBean(user);
-
-        Notification notification = new Notification();
-        notification.setText("Error");
 
         Button registerButton = new Button("Registrieren");
         registerButton.addClickListener(buttonClickEvent -> {

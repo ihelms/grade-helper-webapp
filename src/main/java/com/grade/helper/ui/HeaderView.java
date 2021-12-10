@@ -97,13 +97,16 @@ public abstract class HeaderView extends AppLayout {
         Button logoutButton = new Button(VaadinIcon.EXIT.create());
         logoutButton.addClickListener(buttonClickEvent -> userService.logout());
 
+        HorizontalLayout buttonLayout = new HorizontalLayout(userProfileButton, logoutButton);
+        buttonLayout.setWidth("250px");
+
         HorizontalLayout header = new HorizontalLayout(leftSideHorizontalLayout,
                 schoolYearHorizontalLayout,
-                userProfileButton,
-                logoutButton);
+                buttonLayout);
         header.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        header.getElement().setAttribute("background-color", "gray");
         header.setWidthFull();
-        header.setHeight("25%");
+        header.setHeight("50px");
         header.addClassName("header");
 
         addToNavbar(header);

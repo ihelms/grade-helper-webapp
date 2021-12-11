@@ -69,6 +69,7 @@ public abstract class HeaderView extends AppLayout {
             comboBox.setValue(String.valueOf(VaadinSession.getCurrent().getAttribute("school_year")));
         });
 
+        comboBox = new ComboBox<>();
         comboBox.setWidth("25%");
         comboBox.setClearButtonVisible(true);
         comboBox.setItems(schoolYearStringList);
@@ -147,9 +148,5 @@ public abstract class HeaderView extends AppLayout {
         schoolYearList = userSchoolYearService.getAllSchoolYearsByUser(currentUser);
         schoolYearList.forEach(schoolYear -> helperList.add(schoolYear.getSchoolYearId().getValue()));
         schoolYearStringList = helperList.stream().sorted().collect(Collectors.toList());
-        if(comboBox == null) {
-            comboBox = new ComboBox<>();
-        }
-        comboBox.setItems(schoolYearStringList);
     }
 }

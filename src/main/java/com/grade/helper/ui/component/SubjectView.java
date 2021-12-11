@@ -7,9 +7,11 @@ import com.grade.helper.businesslogic.logic.*;
 import com.grade.helper.ui.HeaderView;
 import com.grade.helper.ui.validator.PlainStringToLongIdConverter;
 import com.grade.helper.ui.validator.StringToGradeTypeConverter;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.TextField;
@@ -73,6 +75,14 @@ public abstract class SubjectView extends HeaderView {
     private VerticalLayout setView() {
         //TODO: HORIZONTALLAYOUT FOR IMPROVEMENT
         HorizontalLayout improvementLayout = new HorizontalLayout();
+
+        if (getImprovement() < 0) {
+            improvementLayout.add(new Text("Keine Verbesserung"));
+        } else if (getImprovement() > 0) {
+            improvementLayout.add(new Text("Verbesserung"));
+        } else {
+            improvementLayout.add(new Text("Keine Veränderung"));
+        }
 
         grid = new Grid<>();
         dataProvider = DataProvider.ofCollection(gradeResourceSet);
@@ -232,5 +242,22 @@ public abstract class SubjectView extends HeaderView {
 
         editContainer.setVisible(true);
         newGradeButton.setVisible(false);
+    }
+
+
+    private double getImprovement() {
+        double average = 0;
+        double lastAverage = 0;
+
+        for (Grade grade : gradeResourceSet) {
+            average = average + (grade.getGrade() * grade.getPrioritisation());
+
+        }
+        for (Grade grade : lastYearGradeResourceSet) {
+            lastAverage = lastAverage + (grade.getGrade() * grade.getPrioritisation());
+
+        }
+
+        return lastAverage - average;
     }
 }

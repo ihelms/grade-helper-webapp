@@ -2,10 +2,8 @@ package com.grade.helper.ui.login;
 
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.logic.UserService;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;

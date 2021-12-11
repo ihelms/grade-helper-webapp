@@ -46,14 +46,13 @@ public class SubjectAverageService {
 
             Set<Grade> gradeList = userGradeService.getAllGradesForSubjectAndSchoolYear(subject, userSchoolYear);
 
-            double average = 0.0;
+            double average = 0;
             for (Grade grade : gradeList) {
                 average = average + (grade.getGrade() * grade.getPrioritisation());
             }
             SubjectAverage subjectAverage = new SubjectAverage(subject.getValue(), average);
             subjectAverageSet.add(subjectAverage);
         }
-
         return subjectAverageSet;
     }
 

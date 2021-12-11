@@ -2,6 +2,7 @@ package com.grade.helper.businesslogic.logic;
 
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.repositories.UserRepository;
+import com.grade.helper.ui.login.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -58,15 +59,17 @@ public class UserService {
         notification.setDuration(650);
 
         try {
-            if (userRepository.findUserByUsername(user.getUsername()) != null) {
+            if (userRepository.findUserByUsername(user.getUsername()) == null) {
                 userRepository.save(user);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 text.setText("User wurde angelegt");
+                notification.open();
+                UI.getCurrent().navigate(LoginView.class);
             } else {
-                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                text.setText("User konnte nicht angelegt werden");
+                text.setText("User existiert bereits");
+                notification.open();
+                throw new Exception();
             }
-            notification.open();
         } catch (Exception exc) {
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             text.setText("Registrierung fehlgeschlagen");

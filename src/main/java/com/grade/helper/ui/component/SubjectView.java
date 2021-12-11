@@ -11,7 +11,6 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.TextField;
@@ -67,8 +66,10 @@ public abstract class SubjectView extends HeaderView {
         User currentUser = userService.getCurrentUser();
         UserSchoolYear currentUserSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(currentUser, selectedSchoolYear);
         selectedSubject = subjectService.getSubjectOfSubjectEnum(subject);
+
         this.gradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, currentUserSchoolYear);
         this.lastYearGradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, userSchoolYearService.findById(currentUserSchoolYear.getId() - 1));
+
         setContent(setView());
     }
 
@@ -244,18 +245,16 @@ public abstract class SubjectView extends HeaderView {
         newGradeButton.setVisible(false);
     }
 
-
     private double getImprovement() {
         double average = 0;
         double lastAverage = 0;
 
         for (Grade grade : gradeResourceSet) {
             average = average + (grade.getGrade() * grade.getPrioritisation());
-
         }
+
         for (Grade grade : lastYearGradeResourceSet) {
             lastAverage = lastAverage + (grade.getGrade() * grade.getPrioritisation());
-
         }
 
         return lastAverage - average;

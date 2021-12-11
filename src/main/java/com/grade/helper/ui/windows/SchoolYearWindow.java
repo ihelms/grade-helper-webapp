@@ -33,6 +33,7 @@ public class SchoolYearWindow extends CustomWindow {
         this.userService = userService;
 
         listBox = new ListBox<>();
+        listBox.setReadOnly(true);
         setListBoxItems();
 
         String schoolYear = VaadinSession.getCurrent() != null
@@ -47,7 +48,9 @@ public class SchoolYearWindow extends CustomWindow {
         }
 
         addClickListenerToAddButton(buttonClickEvent -> {
-            userSchoolYearService.addUserSchoolYear(new UserSchoolYear(userService.getAuthenticatedUserDAO(),
+            VaadinSession.getCurrent().setAttribute("school_year", comboBox.getValue());
+            userSchoolYearService.addUserSchoolYear(new UserSchoolYear(
+                    userService.getCurrentUser(),
                     schoolYearService.getSchoolYearByValue(comboBox.getValue()
                     ))
             );
@@ -62,9 +65,8 @@ public class SchoolYearWindow extends CustomWindow {
 
     private void setListBoxItems() {
         List<UserSchoolYear> userSchoolYearList =
-                userSchoolYearService.getAllSchoolYearsByUser(userService.getAuthenticatedUserDAO());
-        listBox.setItems(userSchoolYearList
-                .stream()
+                userSchoolYearService.getAllSchoolYearsByUser(userService.getCurrentUser());
+        listBox.setItems(userSchoolYearList.stream()
                 .map(userSchoolYear -> userSchoolYear.getSchoolYearId().getValue()));
     }
 }

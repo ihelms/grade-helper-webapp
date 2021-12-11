@@ -40,7 +40,7 @@ public class SubjectAverageService {
 
         for (Subject subject : subjectService.getAll()) {
             UserSchoolYear userSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(
-                    userService.getAuthenticatedUserDAO(),
+                    userService.getCurrentUser(),
                     currentSchoolYear
             );
 

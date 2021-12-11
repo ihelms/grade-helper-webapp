@@ -15,8 +15,8 @@ import javax.persistence.*;
 public class UserSchoolYear {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
     @OneToOne

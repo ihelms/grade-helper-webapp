@@ -19,8 +19,10 @@ public class DeutschView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/deutsch";
 
     @Autowired
-    public DeutschView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public DeutschView(SchoolYearService schoolYearService, SubjectService subjectService,
+                       UserGradeService userGradeService, GradeService gradeService, UserService userService,
+                       UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.DEUTSCH);
+                gradeService, userService, userSchoolYearService, SUBJECT.DEUTSCH, gradeTypeService);
     }
 }

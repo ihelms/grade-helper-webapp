@@ -12,7 +12,7 @@ public class ConfigurationWindow extends CustomWindow {
         super("Benutzereinstellungen");
 
         TextField username = new TextField();
-        username.setValue(userService.getAuthenticatedUserDAO().getUsername());
+        username.setValue(userService.getCurrentUser().getUsername());
         username.setEnabled(false);
         username.setWidth("250px");
 

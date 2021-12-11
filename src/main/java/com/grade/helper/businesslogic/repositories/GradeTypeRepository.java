@@ -9,4 +9,6 @@ public interface GradeTypeRepository extends JpaRepository<GradeType, Long> {
 
     @Override
     List<GradeType> findAll();
+
+    GradeType findByGradeType(String gradeType);
 }

@@ -19,8 +19,10 @@ public class ChemieView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/chemie";
 
     @Autowired
-    public ChemieView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public ChemieView(SchoolYearService schoolYearService, SubjectService subjectService,
+                      UserGradeService userGradeService, GradeService gradeService, UserService userService,
+                      UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.CHEMIE);
+                gradeService, userService, userSchoolYearService, SUBJECT.CHEMIE, gradeTypeService);
     }
 }

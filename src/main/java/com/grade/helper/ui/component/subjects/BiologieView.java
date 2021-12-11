@@ -19,8 +19,9 @@ public class BiologieView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/biologie";
 
     @Autowired
-    public BiologieView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public BiologieView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService,
+                        GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.BIO);
+                gradeService, userService, userSchoolYearService, SUBJECT.BIO, gradeTypeService);
     }
 }

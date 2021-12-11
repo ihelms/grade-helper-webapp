@@ -19,8 +19,9 @@ public class SportView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/sport";
 
     @Autowired
-    public SportView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public SportView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService,
+                     GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.SPORT);
+                gradeService, userService, userSchoolYearService, SUBJECT.SPORT, gradeTypeService);
     }
 }

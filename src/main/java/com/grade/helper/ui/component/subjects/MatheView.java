@@ -19,8 +19,10 @@ public class MatheView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/mathe";
 
     @Autowired
-    public MatheView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public MatheView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService,
+                     GradeService gradeService, UserService userService,
+                     UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.MATHE);
+                gradeService, userService, userSchoolYearService, SUBJECT.MATHE, gradeTypeService);
     }
 }

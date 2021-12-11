@@ -1,6 +1,6 @@
 CREATE TABLE user
 (
-    id        INTEGER PRIMARY KEY NOT NULL,
+    id        INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     username  VARCHAR(25),
     firstName VARCHAR(25),
     lastName  VARCHAR(25),
@@ -9,25 +9,25 @@ CREATE TABLE user
 
 CREATE TABLE schoolYear
 (
-    id   INTEGER PRIMARY KEY NOT NULL,
+    id   INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     year varchar(25) not null
 );
 
 CREATE TABLE gradeType
 (
-    id        INTEGER PRIMARY KEY NOT NULL,
+    id        INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     gradeType VARCHAR(25)
 );
 
 CREATE TABLE subject
 (
-    id      INTEGER PRIMARY KEY NOT NULL,
+    id      INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     subject VARCHAR(25)
 );
 
 CREATE TABLE grade
 (
-    id             INTEGER PRIMARY KEY NOT NULL,
+    id             INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     gradTypeId     INTEGER             NOT NULL,
     subjectId      INTEGER             NOT NULL,
     grade          INTEGER,
@@ -42,7 +42,7 @@ alter table grade
 
 CREATE TABLE userSchoolYear
 (
-    id     INTEGER PRIMARY KEY NOT NULL,
+    id     INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     userId INTEGER             NOT NULL,
     yearId INTEGER             not null
 );
@@ -54,7 +54,7 @@ alter table userSchoolYear
 
 CREATE TABLE userGrade
 (
-    id               INTEGER PRIMARY KEY NOT NULL,
+    id               INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     userSchoolYearId INTEGER             NOT NULL,
     gradeId          INTEGER             not null
 );
@@ -147,6 +147,7 @@ values (3, 3, 5, 5, 0.5);
 insert into grade
 values (4, 4, 5, 4, 0.25);
 
+--id, school_year, grade
 insert into userGrade
 values (1, 1, 1);
 insert into userGrade
@@ -159,5 +160,4 @@ insert into userGrade
 values (5, 2, 2);
 insert into userGrade
 values (6, 2, 3);
-
 

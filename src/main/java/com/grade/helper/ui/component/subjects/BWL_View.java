@@ -19,8 +19,9 @@ public class BWL_View extends SubjectView {
     final static String SUBJECT_VIEW = "subject/bwl";
 
     @Autowired
-    public BWL_View(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public BWL_View(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService,
+                    GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.BWL);
+                gradeService, userService, userSchoolYearService, SUBJECT.BWL, gradeTypeService);
     }
 }

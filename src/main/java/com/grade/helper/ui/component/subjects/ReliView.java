@@ -19,8 +19,11 @@ public class ReliView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/religion";
 
     @Autowired
-    public ReliView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public ReliView(SchoolYearService schoolYearService, SubjectService subjectService,
+                    UserGradeService userGradeService, GradeService gradeService,
+                    UserService userService,
+                    UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.RELI);
+                gradeService, userService, userSchoolYearService, SUBJECT.RELI, gradeTypeService);
     }
 }

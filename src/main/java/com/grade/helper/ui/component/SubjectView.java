@@ -6,6 +6,7 @@ import com.grade.helper.businesslogic.entities.simple.*;
 import com.grade.helper.businesslogic.logic.*;
 import com.grade.helper.ui.HeaderView;
 import com.grade.helper.ui.validator.PlainStringToLongIdConverter;
+import com.grade.helper.ui.validator.StringToGradeTypeConverter;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
@@ -13,7 +14,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.router.Route;
@@ -36,6 +36,7 @@ public abstract class SubjectView extends HeaderView {
     private final Set<Grade> gradeResourceSet;
     private final Set<Grade> lastYearGradeResourceSet;
     private Grade selectedGrade;
+    private final Subject selectedSubject;
 
     private VerticalLayout editContainer;
     private Button newGradeButton;
@@ -43,6 +44,7 @@ public abstract class SubjectView extends HeaderView {
     private TextField idTextField;
 
     private final GradeService gradeService;
+    private final GradeTypeService gradeTypeService;
 
     public SubjectView(SchoolYearService schoolYearService,
                        SubjectService subjectService,
@@ -50,17 +52,19 @@ public abstract class SubjectView extends HeaderView {
                        GradeService gradeService,
                        UserService userService,
                        UserSchoolYearService userSchoolYearService,
-                       SUBJECT subject) {
+                       SUBJECT subject,
+                       GradeTypeService gradeTypeService) {
         super(userGradeService, schoolYearService, subjectService, userService, userSchoolYearService);
 
         this.gradeService = gradeService;
+        this.gradeTypeService = gradeTypeService;
         this.binder = new Binder<>();
 
         String schoolYear = String.valueOf(VaadinSession.getCurrent().getAttribute("school_year"));
         SchoolYear selectedSchoolYear = schoolYearService.getSchoolYearByValue(schoolYear);
-        User currentUser = userService.getAuthenticatedUserDAO();
+        User currentUser = userService.getCurrentUser();
         UserSchoolYear currentUserSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(currentUser, selectedSchoolYear);
-        Subject selectedSubject = subjectService.getSubjectOfSubjectEnum(subject);
+        selectedSubject = subjectService.getSubjectOfSubjectEnum(subject);
         this.gradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, currentUserSchoolYear);
         this.lastYearGradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, userSchoolYearService.findById(currentUserSchoolYear.getId() - 1));
         setContent(setView());
@@ -81,7 +85,7 @@ public abstract class SubjectView extends HeaderView {
 
         createEditContainer();
 
-        grid.addColumn(Grade::getGrade_type)
+        grid.addColumn(grade -> grade.getGrade_type().getGradeType())
                 .setHeader("Notenart")
                 .setSortable(true)
                 .setAutoWidth(true)
@@ -122,15 +126,16 @@ public abstract class SubjectView extends HeaderView {
         idTextField.setReadOnly(true);
         idTextField.setWidth("500px");
 
-        ComboBox<GradeType> gradeTypeComboBox = new ComboBox<>("Notentyp");
-        gradeTypeComboBox.setItems(gradeService.getAllGradeTypes());
+        ComboBox<String> gradeTypeComboBox = new ComboBox<>("Notentyp");
+        gradeTypeComboBox.setItems(gradeService.getAllGradeTypesAsString());
         gradeTypeComboBox.setWidth("500px");
 
         ComboBox<Integer> gradeComboBox = new ComboBox<>("Note");
         gradeComboBox.setItems(List.of(1, 2, 3, 4, 5, 6));
         gradeComboBox.setWidth("500px");
 
-        TextField priorisationTextField = new TextField("Gewichtung");
+        ComboBox<Double> priorisationTextField = new ComboBox<>("Gewichtung");
+        priorisationTextField.setItems(List.of(1.0, 0.8, 0.75, 0.5, 0.25, 0.125, 0.1));
         priorisationTextField.setWidth("500px");
 
         //Binder
@@ -138,11 +143,11 @@ public abstract class SubjectView extends HeaderView {
                 .withConverter(new PlainStringToLongIdConverter())
                 .bind(Grade::getId, Grade::setId);
         binder.forField(gradeTypeComboBox)
+                .withConverter(new StringToGradeTypeConverter(gradeTypeService))
                 .bind(Grade::getGrade_type, Grade::setGrade_type);
         binder.forField(gradeComboBox)
                 .bind(Grade::getGrade, Grade::setGrade);
         binder.forField(priorisationTextField)
-                .withConverter(new StringToDoubleConverter(priorisationTextField.getValue()))
                 .bind(Grade::getPrioritisation, Grade::setPrioritisation);
 
         //ContentLayout
@@ -188,10 +193,12 @@ public abstract class SubjectView extends HeaderView {
         if (binder.validate().isOk()) {
             if (selectedGrade == null) {
                 Grade grade = new Grade();
+                grade.setSubject(selectedSubject);
                 binder.writeBeanIfValid(grade);
                 gradeService.saveGrade(grade);
                 gradeResourceSet.add(grade);
             } else {
+                selectedGrade.setSubject(selectedSubject);
                 gradeResourceSet.remove(selectedGrade);
                 binder.writeBeanIfValid(selectedGrade);
                 gradeService.saveGrade(selectedGrade);

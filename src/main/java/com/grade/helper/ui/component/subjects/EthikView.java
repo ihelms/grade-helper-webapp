@@ -19,8 +19,14 @@ public class EthikView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/ethik";
 
     @Autowired
-    public EthikView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public EthikView(SchoolYearService schoolYearService,
+                     SubjectService subjectService,
+                     UserGradeService userGradeService,
+                     GradeService gradeService,
+                     UserService userService,
+                     UserSchoolYearService userSchoolYearService,
+                     GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.ETHIK);
+                gradeService, userService, userSchoolYearService, SUBJECT.ETHIK, gradeTypeService);
     }
 }

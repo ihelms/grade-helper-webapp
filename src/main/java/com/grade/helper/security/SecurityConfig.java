@@ -1,5 +1,7 @@
 package com.grade.helper.security;
 
+import com.grade.helper.businesslogic.logic.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,7 +9,12 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -17,6 +24,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_FAILURE_URL = "/login?error";
     private static final String LOGIN_URL = "/login";
     private static final String LOGOUT_SUCCESS_URL = "/login";
+
+    final UserService userService;
+
+    @Autowired
+    public SecurityConfig(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -41,14 +55,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("user")
-                .password("{noop}userpass")
-                .roles("USER")
-                .build();
+        List<UserDetails> userList = new LinkedList<>();
 
-        return new InMemoryUserDetailsManager(user);
+        for (com.grade.helper.businesslogic.entities.simple.User user : userService.getAllUsers()) {
+            UserDetails userDetails = User.withUsername(user.getUsername())
+                    .password(String.format("{noop}%s", user.getPassword()))
+                    .roles("USER")
+                    .build();
+            userList.add(userDetails);
+        }
+        return new InMemoryUserDetailsManager(userList);
     }
-
 
     @Override
     public void configure(WebSecurity web) throws Exception {

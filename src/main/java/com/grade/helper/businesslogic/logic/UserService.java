@@ -2,7 +2,6 @@ package com.grade.helper.businesslogic.logic;
 
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.repositories.UserRepository;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -14,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -30,15 +31,18 @@ public class UserService {
 
     public UserDetails getAuthenticatedUser() {
         SecurityContext context = SecurityContextHolder.getContext();
-        Object principal = context.getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return (UserDetails) context.getAuthentication().getPrincipal();
+        if (context.getAuthentication() != null) {
+            Object principal = context.getAuthentication().getPrincipal();
+            if (principal instanceof UserDetails) {
+                return (UserDetails) context.getAuthentication().getPrincipal();
+            }
         }
         return null;
     }
 
-    public User getAuthenticatedUserDAO() {
-        return userRepository.findUserDAOById(1L);
+    public User getCurrentUser() {
+        UserDetails userDetails = getAuthenticatedUser();
+        return userRepository.findUserByUsername(userDetails != null ? userDetails.getUsername() : "");
     }
 
     public void logout() {
@@ -48,16 +52,29 @@ public class UserService {
     }
 
     public void saveUser(User user) {
-        try {
-            userRepository.save(user);
-        } catch (Exception exc) {
-            Notification notification = new Notification();
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        Notification notification = new Notification();
+        Div text = new Div();
+        notification.add(text);
+        notification.setDuration(650);
 
-            Div text = new Div(new Text("Registrierung ist fehlgeschlagen"));
-            notification.add(text);
-            notification.setDuration(650);
+        try {
+            if (userRepository.findUserByUsername(user.getUsername()) != null) {
+                userRepository.save(user);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                text.setText("User wurde angelegt");
+            } else {
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                text.setText("User konnte nicht angelegt werden");
+            }
+            notification.open();
+        } catch (Exception exc) {
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            text.setText("Registrierung fehlgeschlagen");
             notification.open();
         }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

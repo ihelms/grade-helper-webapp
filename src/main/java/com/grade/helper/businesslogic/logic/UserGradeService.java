@@ -1,9 +1,9 @@
 package com.grade.helper.businesslogic.logic;
 
-import com.grade.helper.businesslogic.entities.enums.SUBJECT;
 import com.grade.helper.businesslogic.entities.joined.UserGrade;
 import com.grade.helper.businesslogic.entities.joined.UserSchoolYear;
-import com.grade.helper.businesslogic.entities.simple.*;
+import com.grade.helper.businesslogic.entities.simple.Grade;
+import com.grade.helper.businesslogic.entities.simple.Subject;
 import com.grade.helper.businesslogic.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

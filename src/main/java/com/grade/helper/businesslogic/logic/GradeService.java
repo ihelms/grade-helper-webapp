@@ -35,4 +35,11 @@ public class GradeService {
     public void removeGrade(Grade grade) {
         gradeRepository.delete(grade);
     }
+
+    public List<String> getAllGradeTypesAsString() {
+        List<String> values = new LinkedList<>();
+        List<GradeType> gradeTypeList = getAllGradeTypes();
+        gradeTypeList.forEach(gradeType -> values.add(gradeType.getGradeType()));
+        return values;
+    }
 }

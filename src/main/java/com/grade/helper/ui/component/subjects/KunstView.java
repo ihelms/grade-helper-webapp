@@ -19,8 +19,10 @@ public class KunstView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/kunst";
 
     @Autowired
-    public KunstView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public KunstView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService,
+                     GradeService gradeService, UserService userService,
+                     UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.KUNST);
+                gradeService, userService, userSchoolYearService, SUBJECT.KUNST, gradeTypeService);
     }
 }

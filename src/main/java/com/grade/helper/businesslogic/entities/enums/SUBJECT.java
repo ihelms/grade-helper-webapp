@@ -13,7 +13,7 @@ public enum SUBJECT {
     RELI(10L, "Religion"),
     DEUTSCH(11L, "Deutsch"),
     SPANISCH(12L, "Spanisch"),
-    FRANZOESISCH(13L, "Französisch"),
+    FRANZOESISCH(13L, "Franzoesisch"),
     KUNST(14L, "Kunst"),
     SPORT(15L, "Sport")
     ;

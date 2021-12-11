@@ -19,8 +19,14 @@ public class PhysikView extends SubjectView {
     final static String SUBJECT_VIEW = "subject/physik";
 
     @Autowired
-    public PhysikView(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public PhysikView(SchoolYearService schoolYearService,
+                      SubjectService subjectService,
+                      UserGradeService userGradeService,
+                      GradeService gradeService,
+                      UserService userService,
+                      UserSchoolYearService userSchoolYearService,
+                      GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.PHYSIK);
+                gradeService, userService, userSchoolYearService, SUBJECT.PHYSIK, gradeTypeService);
     }
 }

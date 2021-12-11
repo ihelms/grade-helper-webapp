@@ -19,8 +19,10 @@ public class IV_View extends SubjectView {
     final static String SUBJECT_VIEW = "subject/iv";
 
     @Autowired
-    public IV_View(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService, GradeService gradeService, UserService userService, UserSchoolYearService userSchoolYearService) {
+    public IV_View(SchoolYearService schoolYearService, SubjectService subjectService, UserGradeService userGradeService,
+                   GradeService gradeService, UserService userService,
+                   UserSchoolYearService userSchoolYearService, GradeTypeService gradeTypeService) {
         super(schoolYearService, subjectService, userGradeService,
-                gradeService, userService, userSchoolYearService, SUBJECT.IV);
+                gradeService, userService, userSchoolYearService, SUBJECT.IV, gradeTypeService);
     }
 }

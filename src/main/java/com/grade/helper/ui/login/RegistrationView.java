@@ -2,8 +2,10 @@ package com.grade.helper.ui.login;
 
 import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.logic.UserService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -37,8 +39,10 @@ public class RegistrationView extends VerticalLayout {
         PasswordField passwordConfirmation = new PasswordField("Passwort wiederholen");
         passwordConfirmation.setWidth("250px");
         passwordConfirmation.addValueChangeListener(valueChangeEvent -> {
-            passwordConfirmation.setInvalid(true);
-            passwordConfirmation.setErrorMessage("Stimmt mit Passwort nicht überein!");
+            if(!password.getValue().equals(passwordConfirmation.getValue())) {
+                passwordConfirmation.setInvalid(true);
+                passwordConfirmation.setErrorMessage("Stimmt mit Passwort nicht überein!");
+            }
         });
 
         VerticalLayout fieldLayout = new VerticalLayout(username,

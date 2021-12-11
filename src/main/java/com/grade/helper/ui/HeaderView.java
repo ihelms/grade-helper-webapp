@@ -8,7 +8,6 @@ import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.subjects.*;
 import com.grade.helper.ui.windows.ConfigurationWindow;
 import com.grade.helper.ui.windows.SchoolYearWindow;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -20,8 +19,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 
@@ -50,8 +50,8 @@ public abstract class HeaderView extends AppLayout {
         this.userGradeService = userGradeService;
         this.userSchoolYearService = userSchoolYearService;
 
-        currentUserName = userService.getAuthenticatedUserDAO().getUsername();
-        currentUser = userService.getAuthenticatedUserDAO();
+        currentUserName = userService.getCurrentUser().getUsername();
+        currentUser = userService.getCurrentUser();
         setLists();
 
         Anchor logo = new Anchor("/home", TITLE);
@@ -59,12 +59,16 @@ public abstract class HeaderView extends AppLayout {
         Button schoolYearButton = new Button();
         schoolYearButton.setIcon(VaadinIcon.PLUS.create());
         schoolYearButton.addClickListener(buttonClickEvent -> {
-            SchoolYearWindow schoolYearWindow = new SchoolYearWindow(schoolYearService, userService,
-                    subjectService, userSchoolYearService);
+            SchoolYearWindow schoolYearWindow = new SchoolYearWindow(schoolYearService,
+                    userService,
+                    subjectService,
+                    userSchoolYearService);
             schoolYearWindow.open();
+            setLists();
+            comboBox.setItems(schoolYearStringList);
+            comboBox.setValue(String.valueOf(VaadinSession.getCurrent().getAttribute("school_year")));
         });
 
-        comboBox = new ComboBox<>("");
         comboBox.setWidth("25%");
         comboBox.setClearButtonVisible(true);
         comboBox.setItems(schoolYearStringList);
@@ -73,12 +77,8 @@ public abstract class HeaderView extends AppLayout {
 
         comboBox.addValueChangeListener(valueChanged -> {
             VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue());
-            UI.getCurrent().getPage().reload();
-
-            if (VaadinSession.getCurrent().getAttribute("school_year") != null) {
-                comboBox.setValue(VaadinSession.getCurrent().getAttribute("school_year").toString());
-                setLists();
-            }
+            comboBox.setValue(valueChanged.getValue());
+            setLists();
         });
 
         HorizontalLayout leftSideHorizontalLayout = new HorizontalLayout(new DrawerToggle(), logo);
@@ -143,8 +143,13 @@ public abstract class HeaderView extends AppLayout {
     }
 
     public void setLists() {
-        schoolYearStringList = new LinkedList<>();
+        List<String> helperList = new ArrayList<>();
         schoolYearList = userSchoolYearService.getAllSchoolYearsByUser(currentUser);
-        schoolYearList.forEach(schoolYear -> schoolYearStringList.add(schoolYear.getSchoolYearId().getValue()));
+        schoolYearList.forEach(schoolYear -> helperList.add(schoolYear.getSchoolYearId().getValue()));
+        schoolYearStringList = helperList.stream().sorted().collect(Collectors.toList());
+        if(comboBox == null) {
+            comboBox = new ComboBox<>();
+        }
+        comboBox.setItems(schoolYearStringList);
     }
 }

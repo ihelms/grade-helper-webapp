@@ -77,6 +77,24 @@ public class UserService {
         }
     }
 
+    public void saveUserAfterPasswordChange(User user) {
+        Notification notification = new Notification();
+        Div text = new Div();
+        notification.add(text);
+        notification.setDuration(650);
+
+        try {
+            userRepository.save(user);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            text.setText("Passwort wurde geändert");
+            notification.open();
+        } catch (Exception exc) {
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            text.setText("Speichern fehlgeschlagen");
+            notification.open();
+        }
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

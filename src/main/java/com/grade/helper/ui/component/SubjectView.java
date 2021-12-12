@@ -136,6 +136,8 @@ public abstract class SubjectView extends HeaderView {
         grid.addSelectionListener(this::conditionSelected);
         grid.setHeightByRows(true);
 
+        openErrorMessageIfPrioIsToHigh();
+
         newGradeButton = new Button("Neu", buttonClickEvent -> createNewGrade());
 
         HorizontalLayout buttonLayout = new HorizontalLayout(newGradeButton);
@@ -240,12 +242,14 @@ public abstract class SubjectView extends HeaderView {
         }
         setImprovementLayout();
         newGradeButton.setVisible(true);
+        openErrorMessageIfPrioIsToHigh();
     }
 
     private void cancelEditGrade() {
         selectedGrade = null;
         editContainer.setVisible(false);
         newGradeButton.setVisible(true);
+        openErrorMessageIfPrioIsToHigh();
     }
 
     private void createNewGrade() {
@@ -266,20 +270,21 @@ public abstract class SubjectView extends HeaderView {
         improvementButton = new Button();
         improvementButton.setEnabled(false);
 
-        if (improvement < 0) {
-            improvementButton.setText("Keine Verbesserung zum Vorjahr");
-            improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
-        } else if (improvement > 0) {
-            improvementButton.setText("Zum Vorjahr verbessert");
-            improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
-        } else if (improvement == 0) {
-            improvementButton.setText("Keine Veränderung zum Vorjahr");
+        if (lastYearGradeResourceSet.size() == 0) {
+            improvementButton.setText("Kein Vergleich zum Vorjahr möglich, da keine Daten für das Vorjahr existieren.");
             improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST);
-        } else if (improvement == -1) {
-            improvementButton.setText("Kein Vergleich möglich, da keine Werte vom Vorjahr existieren.");
-            improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST);
+        } else {
+            if (improvement < 0) {
+                improvementButton.setText("Keine Verbesserung zum Vorjahr");
+                improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            } else if (improvement > 0) {
+                improvementButton.setText("Zum Vorjahr verbessert");
+                improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+            } else {
+                improvementButton.setText("Keine Veränderung zum Vorjahr");
+                improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST);
+            }
         }
-        System.out.println(improvement);
     }
 
     private double getImprovement() {
@@ -293,6 +298,22 @@ public abstract class SubjectView extends HeaderView {
             priorisation = priorisation + grade.getPrioritisation();
         }
 
+        for (Grade grade : lastYearGradeResourceSet) {
+            lastAverage = lastAverage + (grade.getGrade() * grade.getPrioritisation());
+        }
+
+        openErrorMessageIfPrioIsToHigh();
+
+        return lastAverage - average;
+    }
+
+    private void openErrorMessageIfPrioIsToHigh() {
+        double priorisation = 0;
+
+        for (Grade grade : gradeResourceSet) {
+            priorisation = priorisation + grade.getPrioritisation();
+        }
+
         if (priorisation > 1) {
             Notification notification = new Notification();
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -300,13 +321,5 @@ public abstract class SubjectView extends HeaderView {
             notification.setDuration(700);
             notification.open();
         }
-
-        for (Grade grade : lastYearGradeResourceSet) {
-            lastAverage = lastAverage + (grade.getGrade() * grade.getPrioritisation());
-        }
-        System.out.println("Last" + lastAverage);
-        System.out.println("Now" + average);
-
-        return lastYearGradeResourceSet.size() != 0 ? lastAverage - average : -1;
     }
 }

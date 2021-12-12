@@ -33,7 +33,6 @@ public abstract class CustomWindow extends Dialog {
 
         HorizontalLayout footer = new HorizontalLayout(addButton, cancelButton);
         footer.setWidthFull();
-        footer.setAlignSelf(FlexComponent.Alignment.END);
 
         VerticalLayout windowLayout = new VerticalLayout(header, contentLayout, footer);
         windowLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);

@@ -52,5 +52,13 @@ public class UserGradeService {
         return gradeList;
     }
 
+    public void removeGrade(Grade grade) {
+        userGradeRepository.removeUserGradeByGradeId(grade);
+    }
+
+    public void saveUserGrade(Grade grade, UserSchoolYear userSchoolYear) {
+        UserGrade userGrade = new UserGrade(userSchoolYear, grade);
+        userGradeRepository.save(userGrade);
+    }
 }
 

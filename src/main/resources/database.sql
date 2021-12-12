@@ -31,7 +31,7 @@ CREATE TABLE grade
     gradTypeId     INTEGER             NOT NULL,
     subjectId      INTEGER             NOT NULL,
     grade          INTEGER,
-    prioritisation INTEGER
+    prioritisation DOUBLE
 );
 
 alter table grade

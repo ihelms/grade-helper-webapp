@@ -7,11 +7,14 @@ import com.grade.helper.businesslogic.logic.*;
 import com.grade.helper.ui.HeaderView;
 import com.grade.helper.ui.validator.PlainStringToLongIdConverter;
 import com.grade.helper.ui.validator.StringToGradeTypeConverter;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -20,8 +23,7 @@ import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Route(SubjectView.SUBJECT_VIEW)
@@ -38,7 +40,10 @@ public abstract class SubjectView extends HeaderView {
     private final Set<Grade> lastYearGradeResourceSet;
     private Grade selectedGrade;
     private final Subject selectedSubject;
+    private final UserSchoolYear currentUserSchoolYear;
 
+    HorizontalLayout improvementLayout;
+    Button improvementButton;
     private VerticalLayout editContainer;
     private Button newGradeButton;
     private Button addButton;
@@ -46,6 +51,7 @@ public abstract class SubjectView extends HeaderView {
 
     private final GradeService gradeService;
     private final GradeTypeService gradeTypeService;
+    private final UserGradeService userGradeService;
 
     public SubjectView(SchoolYearService schoolYearService,
                        SubjectService subjectService,
@@ -59,31 +65,35 @@ public abstract class SubjectView extends HeaderView {
 
         this.gradeService = gradeService;
         this.gradeTypeService = gradeTypeService;
+        this.userGradeService = userGradeService;
         this.binder = new Binder<>();
 
+        VaadinSession.getCurrent().setAttribute("subject", subject.getValue());
+
         String schoolYear = String.valueOf(VaadinSession.getCurrent().getAttribute("school_year"));
-        SchoolYear selectedSchoolYear = schoolYearService.getSchoolYearByValue(schoolYear);
         User currentUser = userService.getCurrentUser();
-        UserSchoolYear currentUserSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(currentUser, selectedSchoolYear);
+        SchoolYear selectedSchoolYear = schoolYearService.getSchoolYearByValue(schoolYear);
+        UserSchoolYear lastUserSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(currentUser,
+                schoolYearService.getSchoolYearById(selectedSchoolYear.getId() - 1));
+        currentUserSchoolYear = userSchoolYearService.getUserSchoolYearByUserAndSchoolYear(currentUser, selectedSchoolYear);
         selectedSubject = subjectService.getSubjectOfSubjectEnum(subject);
 
         this.gradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, currentUserSchoolYear);
-        this.lastYearGradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject, userSchoolYearService.findById(currentUserSchoolYear.getId() - 1));
+        if (lastUserSchoolYear != null) {
+            this.lastYearGradeResourceSet = userGradeService.getAllGradesForSubjectAndSchoolYear(selectedSubject,
+                    lastUserSchoolYear);
+        } else {
+            this.lastYearGradeResourceSet = new HashSet<>();
+        }
 
         setContent(setView());
     }
 
     private VerticalLayout setView() {
-        //TODO: HORIZONTALLAYOUT FOR IMPROVEMENT
-        HorizontalLayout improvementLayout = new HorizontalLayout();
-
-        if (getImprovement() < 0) {
-            improvementLayout.add(new Text("Keine Verbesserung"));
-        } else if (getImprovement() > 0) {
-            improvementLayout.add(new Text("Verbesserung"));
-        } else {
-            improvementLayout.add(new Text("Keine Veränderung"));
-        }
+        setImprovementLayout();
+        improvementLayout = new HorizontalLayout(improvementButton);
+        improvementLayout.setAlignSelf(FlexComponent.Alignment.END, improvementButton);
+        improvementLayout.setWidthFull();
 
         grid = new Grid<>();
         dataProvider = DataProvider.ofCollection(gradeResourceSet);
@@ -113,15 +123,18 @@ public abstract class SubjectView extends HeaderView {
                 .setKey("gradePriorisation");
         grid.addComponentColumn(grade -> new Button(VaadinIcon.TRASH.create(),
                         click -> {
+                            userGradeService.removeGrade(grade);
                             gradeService.removeGrade(grade);
                             gradeResourceSet.remove(grade);
                             grid.getDataProvider().refreshAll();
+                            setImprovementLayout();
                         }))
                 .setWidth("10%");
 
         grid.setDataProvider(DataProvider.ofCollection(gradeResourceSet));
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.addSelectionListener(this::conditionSelected);
+        grid.setHeightByRows(true);
 
         newGradeButton = new Button("Neu", buttonClickEvent -> createNewGrade());
 
@@ -129,7 +142,7 @@ public abstract class SubjectView extends HeaderView {
         buttonLayout.setWidthFull();
         buttonLayout.setAlignItems(FlexComponent.Alignment.END);
 
-        return new VerticalLayout(improvementLayout, grid, editContainer, buttonLayout);
+        return new VerticalLayout(improvementLayout, new H4("Notenübersicht"), grid, editContainer, buttonLayout);
     }
 
     private void createEditContainer() {
@@ -179,7 +192,7 @@ public abstract class SubjectView extends HeaderView {
         buttonLayout.setWidthFull();
         buttonLayout.setAlignItems(FlexComponent.Alignment.END);
 
-        VerticalLayout verticalLayout = new VerticalLayout(contentLayout, buttonLayout);
+        VerticalLayout verticalLayout = new VerticalLayout(new H4("Editor"), contentLayout, buttonLayout);
         verticalLayout.setHorizontalComponentAlignment(FlexComponent.Alignment.END, buttonLayout);
 
         editContainer.add(verticalLayout);
@@ -207,12 +220,14 @@ public abstract class SubjectView extends HeaderView {
                 grade.setSubject(selectedSubject);
                 binder.writeBeanIfValid(grade);
                 gradeService.saveGrade(grade);
+                userGradeService.saveUserGrade(grade, currentUserSchoolYear);
                 gradeResourceSet.add(grade);
             } else {
                 selectedGrade.setSubject(selectedSubject);
                 gradeResourceSet.remove(selectedGrade);
                 binder.writeBeanIfValid(selectedGrade);
                 gradeService.saveGrade(selectedGrade);
+                userGradeService.saveUserGrade(selectedGrade, currentUserSchoolYear);
                 gradeResourceSet.add(selectedGrade);
             }
             editContainer.setVisible(false);
@@ -223,6 +238,7 @@ public abstract class SubjectView extends HeaderView {
         } else {
             binder.validate();
         }
+        setImprovementLayout();
         newGradeButton.setVisible(true);
     }
 
@@ -245,18 +261,52 @@ public abstract class SubjectView extends HeaderView {
         newGradeButton.setVisible(false);
     }
 
+    private void setImprovementLayout() {
+        double improvement = getImprovement();
+        improvementButton = new Button();
+        improvementButton.setEnabled(false);
+
+        if (improvement < 0) {
+            improvementButton.setText("Keine Verbesserung zum Vorjahr");
+            improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+        } else if (improvement > 0) {
+            improvementButton.setText("Zum Vorjahr verbessert");
+            improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+        } else if (improvement == 0) {
+            improvementButton.setText("Keine Veränderung zum Vorjahr");
+            improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST);
+        } else if (improvement == -1) {
+            improvementButton.setText("Kein Vergleich möglich, da keine Werte vom Vorjahr existieren.");
+            improvementButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST);
+        }
+        System.out.println(improvement);
+    }
+
     private double getImprovement() {
         double average = 0;
         double lastAverage = 0;
 
+        double priorisation = 0;
+
         for (Grade grade : gradeResourceSet) {
             average = average + (grade.getGrade() * grade.getPrioritisation());
+            priorisation = priorisation + grade.getPrioritisation();
+        }
+
+        if (priorisation > 1) {
+            Notification notification = new Notification();
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.setText("Gewichtung größer als 100%");
+            notification.setDuration(700);
+            notification.open();
         }
 
         for (Grade grade : lastYearGradeResourceSet) {
             lastAverage = lastAverage + (grade.getGrade() * grade.getPrioritisation());
         }
+        System.out.println("Last" + lastAverage);
+        System.out.println("Now" + average);
 
-        return lastAverage - average;
+        return lastYearGradeResourceSet.size() != 0 ? lastAverage - average : -1;
     }
 }

@@ -32,8 +32,7 @@ public class SchoolYearService {
         return schoolYearRepository.findSchoolYearDAOByValue(schoolYear);
     }
 
-    public void addSchoolYear(SchoolYear schoolYear) {
-
-
+    public SchoolYear getSchoolYearById(Long id) {
+        return schoolYearRepository.findSchoolYearDAOById(id);
     }
 }

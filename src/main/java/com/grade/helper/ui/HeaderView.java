@@ -8,6 +8,7 @@ import com.grade.helper.ui.component.OverviewView;
 import com.grade.helper.ui.component.subjects.*;
 import com.grade.helper.ui.windows.ConfigurationWindow;
 import com.grade.helper.ui.windows.SchoolYearWindow;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -73,13 +74,24 @@ public abstract class HeaderView extends AppLayout {
         comboBox.setWidth("25%");
         comboBox.setClearButtonVisible(true);
         comboBox.setItems(schoolYearStringList);
-        comboBox.setValue(schoolYearStringList.get(schoolYearStringList.size() - 1));
-        VaadinSession.getCurrent().setAttribute("school_year", comboBox.getValue());
+        if (comboBox.getValue() == null) {
+            if (VaadinSession.getCurrent().getAttribute("school_year") == null) {
+                if (schoolYearStringList.size() != 0) {
+                    comboBox.setValue(schoolYearStringList.get(schoolYearStringList.size() - 1));
+                } else {
+                    comboBox.setValue("");
+                }
+                VaadinSession.getCurrent().setAttribute("school_year", comboBox.getValue());
+            } else {
+                comboBox.setValue(String.valueOf(VaadinSession.getCurrent().getAttribute("school_year")));
+            }
+        }
 
         comboBox.addValueChangeListener(valueChanged -> {
             VaadinSession.getCurrent().setAttribute("school_year", valueChanged.getValue());
             comboBox.setValue(valueChanged.getValue());
             setLists();
+            UI.getCurrent().getPage().reload();
         });
 
         HorizontalLayout leftSideHorizontalLayout = new HorizontalLayout(new DrawerToggle(), logo);
@@ -136,10 +148,11 @@ public abstract class HeaderView extends AppLayout {
         RouterLink link_14 = new RouterLink(SUBJECT.BWL.getValue(), BWL_View.class);
         RouterLink link_15 = new RouterLink(SUBJECT.VWL.getValue(), VWL_View.class);
 
-        drawerLayout.addAndExpand(overviewLink, link_1, link_2, link_3, link_4, link_5,
+        List<RouterLink> routerLinkList = List.of(overviewLink, link_1, link_2, link_3, link_4, link_5,
                 link_6, link_7, link_8, link_9, link_10,
                 link_11, link_12, link_13, link_14, link_15);
 
+        routerLinkList.forEach(drawerLayout::add);
         return drawerLayout;
     }
 

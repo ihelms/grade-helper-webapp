@@ -19,7 +19,7 @@ public class ConfigurationWindow extends CustomWindow {
         Button changePassword = new Button("Passwort ändern");
         changePassword.setWidth("250px");
         changePassword.addClickListener(buttonClickEvent -> {
-            ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow();
+            ChangePasswordWindow changePasswordWindow = new ChangePasswordWindow(userService);
             changePasswordWindow.open();
         });
 

@@ -17,5 +17,4 @@ public interface SchoolYearRepository extends JpaRepository<SchoolYear, Long> {
 
     @Override
     List<SchoolYear> findAll();
-
 }

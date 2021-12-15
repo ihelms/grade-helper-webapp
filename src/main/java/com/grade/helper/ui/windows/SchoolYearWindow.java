@@ -21,6 +21,7 @@ public class SchoolYearWindow extends CustomWindow {
     UserService userService;
 
     ListBox<String> listBox;
+    List<UserSchoolYear> userSchoolYearList;
 
     public SchoolYearWindow(SchoolYearService schoolYearService,
                             UserService userService,
@@ -48,13 +49,26 @@ public class SchoolYearWindow extends CustomWindow {
         }
 
         addClickListenerToAddButton(buttonClickEvent -> {
-            VaadinSession.getCurrent().setAttribute("school_year", comboBox.getValue());
-            userSchoolYearService.addUserSchoolYear(new UserSchoolYear(
-                    userService.getCurrentUser(),
-                    schoolYearService.getSchoolYearByValue(comboBox.getValue()
-                    ))
-            );
-            setListBoxItems();
+            boolean exists = false;
+            List<UserSchoolYear> userSchoolYearListActual =
+                    userSchoolYearService.getAllSchoolYearsByUser(userService.getCurrentUser());
+            for (UserSchoolYear userSchoolYear : userSchoolYearList) {
+                if (userSchoolYearListActual.contains(userSchoolYear)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (exists) {
+                VaadinSession.getCurrent().setAttribute("school_year", comboBox.getValue());
+                userSchoolYearService.addUserSchoolYear(new UserSchoolYear(
+                        userService.getCurrentUser(),
+                        schoolYearService.getSchoolYearByValue(comboBox.getValue()
+                        ))
+                );
+                setListBoxItems();
+            } else {
+                System.out.println("Error");
+            }
             this.close();
         });
 
@@ -64,7 +78,7 @@ public class SchoolYearWindow extends CustomWindow {
     }
 
     private void setListBoxItems() {
-        List<UserSchoolYear> userSchoolYearList =
+        userSchoolYearList =
                 userSchoolYearService.getAllSchoolYearsByUser(userService.getCurrentUser());
         listBox.setItems(userSchoolYearList.stream()
                 .map(userSchoolYear -> userSchoolYear.getSchoolYearId().getValue()));

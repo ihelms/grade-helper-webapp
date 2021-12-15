@@ -16,12 +16,14 @@ public class ChangePasswordWindow extends CustomWindow {
         User currentUser = userService.getCurrentUser();
         Binder<User> binder = new Binder<>();
 
-        PasswordField passwordTextField = new PasswordField("Password");
+        PasswordField password = new PasswordField("Password");
         PasswordField confirmationPasswordTextField = new PasswordField("Confirm Password");
-
-        binder.forField(passwordTextField)
-                .bind(User::getPassword, User::setPassword);
-        binder.readBean(currentUser);
+        confirmationPasswordTextField.addValueChangeListener(valueChangeEvent -> {
+            if(!password.getValue().equals(confirmationPasswordTextField.getValue())) {
+                confirmationPasswordTextField.setInvalid(true);
+                confirmationPasswordTextField.setErrorMessage("Stimmt mit Passwort nicht überein!");
+            }
+        });
 
         addClickListenerToAddButton(buttonClickEvent -> {
             binder.writeBeanIfValid(currentUser);
@@ -29,7 +31,7 @@ public class ChangePasswordWindow extends CustomWindow {
             this.close();
         });
 
-        VerticalLayout contentLayout = new VerticalLayout(passwordTextField, confirmationPasswordTextField);
+        VerticalLayout contentLayout = new VerticalLayout(password, confirmationPasswordTextField);
         contentLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
         setContent(contentLayout);
     }

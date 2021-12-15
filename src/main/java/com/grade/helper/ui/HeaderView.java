@@ -65,9 +65,9 @@ public abstract class HeaderView extends AppLayout {
                     subjectService,
                     userSchoolYearService);
             schoolYearWindow.open();
-            setLists();
-            comboBox.setItems(schoolYearStringList);
-            comboBox.setValue(String.valueOf(VaadinSession.getCurrent().getAttribute("school_year")));
+         //   setLists();
+           // comboBox.setItems(schoolYearStringList);
+           // comboBox.setValue(String.valueOf(VaadinSession.getCurrent().getAttribute("school_year")));
         });
 
         comboBox = new ComboBox<>();

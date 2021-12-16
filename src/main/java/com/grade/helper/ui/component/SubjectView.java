@@ -153,7 +153,7 @@ public abstract class SubjectView extends HeaderView {
         idTextField.setWidth("500px");
 
         ComboBox<String> gradeTypeComboBox = new ComboBox<>("Notentyp");
-        gradeTypeComboBox.setItems(gradeService.getAllGradeTypesAsString());
+        gradeTypeComboBox.setItems(gradeTypeService.getAllGradeTypesAsString());
         gradeTypeComboBox.setWidth("500px");
 
         ComboBox<Integer> gradeComboBox = new ComboBox<>("Note");

@@ -12,20 +12,13 @@ import java.util.*;
 public class GradeService {
 
     GradeRepository gradeRepository;
-    GradeTypeRepository gradeTypeRepository;
     SubjectRepository subjectRepository;
 
     @Autowired
     public GradeService(GradeRepository gradeRepository,
-                        GradeTypeRepository gradeTypeRepository,
                         SubjectRepository subjectRepository) {
         this.gradeRepository = gradeRepository;
-        this.gradeTypeRepository = gradeTypeRepository;
         this.subjectRepository = subjectRepository;
-    }
-
-    public List<GradeType> getAllGradeTypes() {
-        return gradeTypeRepository.findAll();
     }
 
     public void saveGrade(Grade grade) {
@@ -34,12 +27,5 @@ public class GradeService {
 
     public void removeGrade(Grade grade) {
         gradeRepository.delete(grade);
-    }
-
-    public List<String> getAllGradeTypesAsString() {
-        List<String> values = new LinkedList<>();
-        List<GradeType> gradeTypeList = getAllGradeTypes();
-        gradeTypeList.forEach(gradeType -> values.add(gradeType.getGradeType()));
-        return values;
     }
 }

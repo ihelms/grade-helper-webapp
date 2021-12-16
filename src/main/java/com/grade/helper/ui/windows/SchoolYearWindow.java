@@ -3,6 +3,7 @@ package com.grade.helper.ui.windows;
 import com.grade.helper.businesslogic.entities.enums.YEAR;
 import com.grade.helper.businesslogic.entities.joined.UserSchoolYear;
 import com.grade.helper.businesslogic.logic.*;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -58,7 +59,7 @@ public class SchoolYearWindow extends CustomWindow {
                     break;
                 }
             }
-            if (exists) {
+            if (!exists) {
                 VaadinSession.getCurrent().setAttribute("school_year", comboBox.getValue());
                 userSchoolYearService.addUserSchoolYear(new UserSchoolYear(
                         userService.getCurrentUser(),
@@ -66,6 +67,7 @@ public class SchoolYearWindow extends CustomWindow {
                         ))
                 );
                 setListBoxItems();
+                UI.getCurrent().getPage().reload();
             } else {
                 System.out.println("Error");
             }

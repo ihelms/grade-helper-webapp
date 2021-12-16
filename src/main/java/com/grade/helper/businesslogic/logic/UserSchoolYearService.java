@@ -7,10 +7,8 @@ import com.grade.helper.businesslogic.repositories.UserSchoolRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @Service
 public class UserSchoolYearService {
 
@@ -32,8 +30,4 @@ public class UserSchoolYearService {
         return userSchoolRepository.findByUserIdAndSchoolYearId(currentUser, selectedSchoolYear);
     }
 
-    public UserSchoolYear findById(Long id) {
-        Optional<UserSchoolYear> userSchoolYear = userSchoolRepository.findById(id);
-        return userSchoolYear.get();
-    }
 }

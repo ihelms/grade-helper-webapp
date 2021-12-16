@@ -15,19 +15,6 @@ public class SchoolYearService {
         this.schoolYearRepository = schoolYearRepository;
     }
 
-    public Set<String> getSchoolYearValuesByUser() {
-        return new HashSet<>();
-    }
-
-    public List<String> getAllSchoolYearsAsString() {
-        List<String> schoolYearName = new LinkedList<>();
-
-        List<SchoolYear> schoolYearList = schoolYearRepository.findAll();
-        schoolYearList.forEach(schoolYearDAO -> schoolYearName.add(schoolYearDAO.getValue()));
-
-        return schoolYearName;
-    }
-
     public SchoolYear getSchoolYearByValue(String schoolYear) {
         return schoolYearRepository.findSchoolYearDAOByValue(schoolYear);
     }

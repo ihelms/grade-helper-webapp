@@ -11,6 +11,7 @@ public abstract class CustomWindow extends Dialog {
 
     private final VerticalLayout contentLayout;
     private final Button addButton;
+    private final Button cancelButton;
 
     public CustomWindow(String title) {
         super();
@@ -27,8 +28,10 @@ public abstract class CustomWindow extends Dialog {
         header.setWidthFull();
 
         addButton = new Button("Hinzufügen");
+        addButton.setVisible(true);
 
-        Button cancelButton = new Button("Abbrechen");
+        cancelButton = new Button("Abbrechen");
+        cancelButton.setVisible(true);
         cancelButton.addClickListener(buttonClickEvent -> this.close());
 
         HorizontalLayout footer = new HorizontalLayout(addButton, cancelButton);
@@ -47,5 +50,10 @@ public abstract class CustomWindow extends Dialog {
 
     public void addClickListenerToAddButton(ComponentEventListener<ClickEvent<Button>> listener) {
         this.addButton.addClickListener(listener);
+    }
+
+    public void setButtonsInvisible() {
+        this.addButton.setVisible(false);
+        this.cancelButton.setVisible(false);
     }
 }

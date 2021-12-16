@@ -1,9 +1,10 @@
 package com.grade.helper.ui.windows;
 
+import com.grade.helper.businesslogic.entities.simple.User;
 import com.grade.helper.businesslogic.logic.UserService;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 
 
 public class ConfigurationWindow extends CustomWindow {
@@ -11,8 +12,9 @@ public class ConfigurationWindow extends CustomWindow {
     public ConfigurationWindow(UserService userService) {
         super("Benutzereinstellungen");
 
-        TextField username = new TextField();
-        username.setValue(userService.getCurrentUser().getUsername());
+        User currentUser = userService.getCurrentUser();
+
+        Label username = new Label(currentUser.getUsername());
         username.setEnabled(false);
         username.setWidth("250px");
 
@@ -23,6 +25,7 @@ public class ConfigurationWindow extends CustomWindow {
             changePasswordWindow.open();
         });
 
+        setButtonsInvisible();
         setContent(new VerticalLayout(username, changePassword));
     }
 }

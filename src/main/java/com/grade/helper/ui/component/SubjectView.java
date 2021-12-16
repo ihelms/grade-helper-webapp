@@ -304,7 +304,7 @@ public abstract class SubjectView extends HeaderView {
 
         openErrorMessageIfPrioIsToHigh();
 
-        return average != 0 ? lastAverage - average : 0;
+        return average != 0 ? lastAverage - average : -lastAverage;
     }
 
     private void openErrorMessageIfPrioIsToHigh() {

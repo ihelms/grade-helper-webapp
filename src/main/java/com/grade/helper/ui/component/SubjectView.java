@@ -241,6 +241,8 @@ public abstract class SubjectView extends HeaderView {
             binder.validate();
         }
         setImprovementLayout();
+        improvementLayout.removeAll();
+        improvementLayout.add(improvementButton);
         newGradeButton.setVisible(true);
         openErrorMessageIfPrioIsToHigh();
     }
@@ -304,7 +306,7 @@ public abstract class SubjectView extends HeaderView {
 
         openErrorMessageIfPrioIsToHigh();
 
-        return average != 0 ? lastAverage - average : -lastAverage;
+        return gradeResourceSet.size() != 0 ? lastAverage - average : -lastAverage;
     }
 
     private void openErrorMessageIfPrioIsToHigh() {
